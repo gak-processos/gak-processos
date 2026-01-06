@@ -1,0 +1,1461 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GAK Processos - Portal Integrado v2.1 COMPLETA</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .header {
+            background: white;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .header h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+        
+        .header .subtitle {
+            color: #7f8c8d;
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+        
+        .header .project-info {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .header .project-info strong {
+            color: #667eea;
+        }
+        
+        .header .stats {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            text-align: center;
+            min-width: 140px;
+        }
+        
+        .stat-card .number {
+            font-size: 2em;
+            font-weight: bold;
+        }
+        
+        .stat-card .label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 30px auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+        
+        .tabs {
+            display: flex;
+            background: #34495e;
+            overflow-x: auto;
+            flex-wrap: wrap;
+        }
+        
+        .tab {
+            padding: 20px 30px;
+            cursor: pointer;
+            color: white;
+            font-weight: 600;
+            transition: all 0.3s;
+            white-space: nowrap;
+            border-right: 1px solid #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .tab:hover {
+            background: #2c3e50;
+        }
+        
+        .tab.active {
+            background: white;
+            color: #2c3e50;
+        }
+        
+        .tab-icon {
+            font-size: 1.3em;
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 40px;
+            animation: fadeIn 0.3s;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .section-title {
+            color: #2c3e50;
+            font-size: 2em;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+        }
+        
+        .subsection-title {
+            color: #2c3e50;
+            font-size: 1.5em;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            padding-left: 10px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .card {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .card h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .process-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 25px;
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .process-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.2);
+            transform: translateY(-5px);
+        }
+        
+        .process-card .icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+        
+        .process-card h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .process-card .meta {
+            color: #7f8c8d;
+            font-size: 0.9em;
+            margin-top: 10px;
+        }
+        
+        .process-card.new {
+            border-color: #27ae60;
+            background: #d4edda;
+        }
+        
+        .process-card.new .badge {
+            background: #27ae60;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.8em;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 10px;
+        }
+        
+        .btn:hover {
+            transform: scale(1.05);
+        }
+        
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .alert-info {
+            background: #e8f4f8;
+            border-left: 4px solid #3498db;
+            color: #2c3e50;
+        }
+        
+        .alert-success {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            color: #2c3e50;
+        }
+        
+        .alert-warning {
+            background: #fff3cd;
+            border-left: 4px solid #f39c12;
+            color: #2c3e50;
+        }
+        
+        .alert-danger {
+            background: #ffe6e6;
+            border-left: 4px solid #e74c3c;
+            color: #2c3e50;
+        }
+        
+        .quick-links {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        
+        .quick-link {
+            background: white;
+            border: 2px solid #667eea;
+            padding: 10px 20px;
+            border-radius: 8px;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        
+        .quick-link:hover {
+            background: #667eea;
+            color: white;
+        }
+        
+        .quote-box {
+            background: #f8f9fa;
+            border-left: 4px solid #3498db;
+            padding: 20px;
+            margin: 20px 0;
+            font-style: italic;
+            color: #2c3e50;
+        }
+        
+        .quote-box .author {
+            font-style: normal;
+            font-weight: bold;
+            color: #667eea;
+            margin-top: 10px;
+            display: block;
+        }
+        
+        .update-badge {
+            background: #27ae60;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        
+        .timeline {
+            position: relative;
+            padding: 20px 0;
+        }
+        
+        .timeline-item {
+            position: relative;
+            padding-left: 40px;
+            margin-bottom: 30px;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 10px;
+            top: 0;
+            bottom: -30px;
+            width: 2px;
+            background: #667eea;
+        }
+        
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            left: 5px;
+            top: 5px;
+            width: 12px;
+            height: 12px;
+            background: #667eea;
+            border-radius: 50%;
+        }
+        
+        .timeline-item:last-child::before {
+            display: none;
+        }
+        
+        .timeline-item h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+        
+/* ESTILOS FORMULÁRIO FEEDBACK */
+        .feedback-form {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            color: #2c3e50;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+        
+        .form-group label .required {
+            color: #e74c3c;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .form-group small {
+            color: #7f8c8d;
+            font-size: 0.9em;
+            display: block;
+            margin-top: 5px;
+        }
+        
+        .radio-group {
+            display: flex;
+            gap: 20px;
+            margin-top: 10px;
+        }
+        
+        .radio-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .radio-option input[type="radio"] {
+            width: auto;
+            cursor: pointer;
+        }
+        
+        .radio-option label {
+            margin: 0;
+            cursor: pointer;
+            font-weight: normal;
+        }
+        
+        .priority-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .priority-btn {
+            padding: 10px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+        
+        .priority-btn:hover {
+            transform: scale(1.05);
+        }
+        
+        .priority-btn.selected {
+            border-color: #667eea;
+            background: #667eea;
+            color: white;
+        }
+        
+        .priority-btn.baixa.selected {
+            background: #27ae60;
+            border-color: #27ae60;
+        }
+        
+        .priority-btn.media.selected {
+            background: #f39c12;
+            border-color: #f39c12;
+        }
+        
+        .priority-btn.alta.selected {
+            background: #e74c3c;
+            border-color: #e74c3c;
+        }
+        
+        .btn-submit {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: transform 0.2s;
+            width: 100%;
+        }
+        
+        .btn-submit:hover {
+            transform: scale(1.02);
+        }
+        
+        .btn-submit:disabled {
+            background: #95a5a6;
+            cursor: not-allowed;
+        }
+        
+        .success-message {
+            background: #d4edda;
+            border: 2px solid #28a745;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            display: none;
+        }
+        
+        .success-message.show {
+            display: block;
+            animation: slideDown 0.5s;
+        }
+        
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .feedback-history {
+            margin-top: 40px;
+        }
+        
+        .feedback-item {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+        }
+        
+        .feedback-item.melhoria {
+            border-left-color: #27ae60;
+        }
+        
+        .feedback-item.problema {
+            border-left-color: #e74c3c;
+        }
+        
+        .feedback-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 10px;
+        }
+        
+        .feedback-meta {
+            display: flex;
+            gap: 15px;
+            font-size: 0.9em;
+            color: #7f8c8d;
+        }
+        
+        .priority-badge {
+            padding: 5px 12px;
+            border-radius: 5px;
+            font-size: 0.85em;
+            font-weight: bold;
+        }
+        
+        .priority-badge.baixa {
+            background: #d4edda;
+            color: #27ae60;
+        }
+        
+        .priority-badge.media {
+            background: #fff3cd;
+            color: #f39c12;
+        }
+        
+        .priority-badge.alta {
+            background: #ffe6e6;
+            color: #e74c3c;
+        }
+        
+        @media
+        @media (max-width: 768px) {
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .tab {
+                border-right: none;
+                border-bottom: 1px solid #2c3e50;
+            }
+            
+            .card-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🏗️ GAK PROCESSOS</h1>
+        <p class="subtitle">Portal Integrado de Processos Operacionais v2.1 COMPLETA</p>
+        
+        <div class="project-info">
+            <strong>Projeto:</strong> Estruturação Operacional GAK (90 dias)<br>
+            <strong>Metodologia:</strong> CORE (Clareza, Organização, Ritmo, Execução)<br>
+            <strong>Período:</strong> 27 Nov 2025 → Final Fev 2026<br>
+            <strong>Status:</strong> Semana 3 - Design Processos Novos <span class="update-badge">COM FEEDBACK 29/12/25</span>
+        </div>
+        
+        <div class="stats">
+            <div class="stat-card">
+                <div class="number">7</div>
+                <div class="label">Processos Modelados</div>
+            </div>
+            <div class="stat-card">
+                <div class="number">9</div>
+                <div class="label">Problemas Identificados</div>
+            </div>
+            <div class="stat-card">
+                <div class="number">2.5/5</div>
+                <div class="label">Maturidade Atual</div>
+            </div>
+            <div class="stat-card">
+                <div class="number">5</div>
+                <div class="label">Melhorias Jan/26</div>
+            </div>
+            <div class="stat-card">
+                <div class="number">3</div>
+                <div class="label">Marcos Validados</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="tabs">
+            <div class="tab active" onclick="openTab(event, 'inicio')">
+                <span class="tab-icon">🏠</span>
+                <span>Início</span>
+            </div>
+            <div class="tab" onclick="openTab(event, 'processos')">
+                <span class="tab-icon">🔄</span>
+                <span>Processos (7)</span>
+            </div>
+            <div class="tab" onclick="openTab(event, 'novidades')">
+                <span class="tab-icon">✨</span>
+                <span>Novidades</span>
+            </div>
+            <div class="tab" onclick="openTab(event, 'diagnostico')">
+                <span class="tab-icon">📊</span>
+                <span>Diagnóstico</span>
+            </div>
+            <div class="tab" onclick="openTab(event, 'melhorias')">
+                <span class="tab-icon">🚀</span>
+                <span>Melhorias Jan/26</span>
+            </div>
+            <div class="tab" onclick="openTab(event, 'marcos')">
+                <span class="tab-icon">🎯</span>
+                <span>Marcos</span>
+            </div>
+            <div class="tab" onclick="openTab(event, 'feedback')">
+                <span class="tab-icon">💬</span>
+                <span>Feedback</span>
+            </div>
+            <div class="tab" onclick="openTab(event, 'documentos')">
+                <span class="tab-icon">📄</span>
+                <span>Documentos</span>
+            </div>
+        </div>
+
+        <!-- ABA INÍCIO -->
+        <div id="inicio" class="tab-content active">
+            <h2 class="section-title">Bem-vindo ao Portal GAK v2.1 COMPLETA <span class="update-badge">ATUALIZADO</span></h2>
+            
+            <div class="alert alert-success">
+                <strong>🎉 NOVIDADES 29/12/2025:</strong><br>
+                • Processo Gestão de Mudanças completo (9 etapas validadas)<br>
+                • 3 Marcos do projeto definidos<br>
+                • Melhorias operacionais validadas<br>
+                • Escopo prestadores estruturado<br>
+                • Dupla entrega obra implementada
+            </div>
+
+            <h3 class="subsection-title">🎯 Navegação Rápida</h3>
+            <div class="quick-links">
+                <a href="#" onclick="openTab(event, 'processos')" class="quick-link">🔄 Ver 7 Processos</a>
+                <a href="#" onclick="openTab(event, 'novidades')" class="quick-link">✨ O Que Há de Novo</a>
+                <a href="#" onclick="openTab(event, 'diagnostico')" class="quick-link">📊 Diagnóstico</a>
+                <a href="#" onclick="openTab(event, 'melhorias')" class="quick-link">🚀 Melhorias Janeiro</a>
+            </div>
+
+            <h3 class="subsection-title">📈 Progresso Projeto</h3>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <h4>✅ Semana 0: Imersão (27 Nov - 01 Dez)</h4>
+                    <p>Diagnóstico validado - Maturidade 2.5/5.0 - 4 dores confirmadas</p>
+                </div>
+                <div class="timeline-item">
+                    <h4>✅ Semana 2: Consolidação</h4>
+                    <p>5 problemas estruturais identificados - Padrões descobertos</p>
+                </div>
+                <div class="timeline-item">
+                    <h4>🔄 Semana 3: Design Processos (ATUAL)</h4>
+                    <p>6 processos técnicos modelados + 1 processo gestão novo</p>
+                </div>
+                <div class="timeline-item">
+                    <h4>📅 Janeiro 2026: Implementação</h4>
+                    <p>5 melhorias prontas para aplicar em obras novas</p>
+                </div>
+            </div>
+
+            <h3 class="subsection-title">💡 Destaques</h3>
+            <div class="card-grid">
+                <div class="card">
+                    <h3>🆕 Gestão de Mudanças</h3>
+                    <p>Processo completo criado e validado - 9 etapas para proteger margem e evitar prejuízos</p>
+                    <button class="btn" onclick="openTab(event, 'processos')">Ver Processo</button>
+                </div>
+                <div class="card">
+                    <h3>🎯 3 Marcos Definidos</h3>
+                    <p>Pré-existência, Validações técnicas e Cobrança extras estruturados</p>
+                    <button class="btn" onclick="openTab(event, 'marcos')">Ver Marcos</button>
+                </div>
+                <div class="card">
+                    <h3>📋 Escopo Prestadores</h3>
+                    <p>Documento assinado obrigatório a partir 2026 - Extras separados</p>
+                </div>
+            </div>
+
+            <div class="quote-box">
+                "A GAK possui excelência na entrega, mas processos internos críticos que geram ansiedade na equipe e limitam margem de lucro. Com estes 7 processos estruturados, caminhamos para maturidade operacional."
+                <span class="author">— Síntese Diagnóstico</span>
+            </div>
+        </div>
+
+        <!-- ABA PROCESSOS -->
+        <div id="processos" class="tab-content">
+            <h2 class="section-title">🔄 Processos Modelados (7 Total)</h2>
+            
+            <div class="alert alert-info">
+                <strong>📌 Processos Técnicos + Gestão:</strong><br>
+                6 processos técnicos (ciclo obra) + 1 processo gestão (controle alterações)
+            </div>
+
+            <h3 class="subsection-title">📦 Processos Técnicos (Ciclo Obra)</h3>
+            <div class="card-grid">
+                <div class="process-card" onclick="alert('Arquivo: POP_Orcamentacao_BPMN_Swimlanes.html')">
+                    <div class="icon">💰</div>
+                    <h3>0. Orçamentação</h3>
+                    <p>Processo comercial PRÉ-obra</p>
+                    <div class="meta">
+                        ⏱️ 10 dias | 👥 5 atores | 📊 Comercial
+                    </div>
+                    <button class="btn">Ver Fluxograma</button>
+                </div>
+
+                <div class="process-card" onclick="alert('Arquivo: POP_Inicio_Obra_Swimlanes_Visuais.html')">
+                    <div class="icon">🏗️</div>
+                    <h3>1. Início de Obra</h3>
+                    <p>Preparação e validações pré-execução</p>
+                    <div class="meta">
+                        ⏱️ 3-5 dias | 👥 5 atores | 📊 Pré-Execução
+                    </div>
+                    <button class="btn">Ver Fluxograma</button>
+                </div>
+
+                <div class="process-card" onclick="alert('Arquivo: POP_Revisao_Projeto_BPMN_Swimlanes.html')">
+                    <div class="icon">📋</div>
+                    <h3>2. Revisão de Projeto</h3>
+                    <p>13 perguntas técnicas + Aprovação</p>
+                    <div class="meta">
+                        ⏱️ Variável | 👥 3 atores | 📊 Projeto
+                    </div>
+                    <button class="btn">Ver Fluxograma</button>
+                </div>
+
+                <div class="process-card" onclick="alert('Arquivo: POP_Demolicao_Civil_BPMN_Swimlanes.html')">
+                    <div class="icon">🔨</div>
+                    <h3>3. Demolição + Civil</h3>
+                    <p>16 etapas + Marco 1 crítico</p>
+                    <div class="meta">
+                        ⏱️ Variável | 👥 4 atores | 📊 Execução 1
+                    </div>
+                    <button class="btn">Ver Fluxograma</button>
+                </div>
+
+                <div class="process-card" onclick="alert('Arquivo: POP_Hidraulica_BPMN_Swimlanes.html')">
+                    <div class="icon">💧</div>
+                    <h3>4. Hidráulica</h3>
+                    <p>13 etapas + AS BUILT crítico</p>
+                    <div class="meta">
+                        ⏱️ Variável | 👥 2 atores | 📊 Execução 2
+                    </div>
+                    <button class="btn">Ver Fluxograma</button>
+                </div>
+
+                <div class="process-card" onclick="alert('Arquivo: POP_Finalizacao_Obra_BPMN_Swimlanes.html')">
+                    <div class="icon">🎉</div>
+                    <h3>5. Finalização de Obra</h3>
+                    <p>4 pilares paralelos - 1 mês prazo</p>
+                    <div class="meta">
+                        ⏱️ 1 mês | 👥 2 atores | 📊 Encerramento
+                    </div>
+                    <button class="btn">Ver Fluxograma</button>
+                </div>
+            </div>
+
+            <h3 class="subsection-title">✨ Processo de Gestão (Novo!)</h3>
+            <div class="card-grid">
+                <div class="process-card new" onclick="alert('Arquivo: POP_Gestao_Mudancas_BPMN_Completo.html')">
+                    <div class="badge">NOVO 29/12</div>
+                    <div class="icon">🔄</div>
+                    <h3>6. Gestão de Mudanças</h3>
+                    <p>Controle alterações - Protege margem</p>
+                    <div class="meta">
+                        ⏱️ 9 etapas | 👥 5 atores | 📊 Durante toda obra
+                    </div>
+                    <button class="btn">Ver Fluxograma</button>
+                </div>
+            </div>
+
+            <div class="alert alert-success">
+                <strong>✅ Cobertura Completa:</strong><br>
+                Comercial → Pré-Obra → Projeto → Execução → Encerramento + Gestão Mudanças
+            </div>
+        </div>
+
+        <!-- ABA NOVIDADES -->
+        <div id="novidades" class="tab-content">
+            <h2 class="section-title">✨ O Que Há de Novo (29/12/2025)</h2>
+            
+            <div class="alert alert-success">
+                <strong>🎉 REUNIÃO 29/12:</strong> Validação processos com Guilherme, Thaiz e Carlos
+            </div>
+
+            <h3 class="subsection-title">🔄 1. PROCESSO GESTÃO DE MUDANÇAS (VALIDADO)</h3>
+            <div class="card">
+                <h3>Objetivo</h3>
+                <p>Proteger margem da obra, evitar retrabalhos, garantir que cliente pague por mudanças que solicita, e manter histórico rastreável de todas alterações.</p>
+            </div>
+
+            <div class="card">
+                <h3>9 Etapas do Processo</h3>
+                <ol style="margin-left: 20px; margin-top: 10px;">
+                    <li><strong>ETAPA 0:</strong> Baseline - Projeto inicial formalizado (data/hora no contrato)</li>
+                    <li><strong>ETAPA 1:</strong> Recebimento alterações (e-mail obrigatório, projeto completo sempre)</li>
+                    <li><strong>ETAPA 2:</strong> Validação projeto (Thaiz + Estagiário conferem)</li>
+                    <li><strong>ETAPA 3:</strong> Levar para obra (Responsável técnico assina recebimento)</li>
+                    <li><strong>ETAPA 4:</strong> Comunicação prestadores (e-mail formal + confirmação 48h)</li>
+                    <li><strong>ETAPA 5:</strong> 🔴 Análise impactos (PAUSA obrigatória + análise margem)</li>
+                    <li><strong>ETAPA 6:</strong> 🔴 Aprovação Guilherme (sempre! SLA 24h)</li>
+                    <li><strong>ETAPA 7:</strong> Formalização cliente/arquiteto (e-mails + VIGHA)</li>
+                    <li><strong>ETAPA 8:</strong> Registro e controle (planilhas + Drive)</li>
+                    <li><strong>ETAPA 9:</strong> Fiscalização implementação (fotos + validação)</li>
+                </ol>
+            </div>
+
+            <div class="card">
+                <h3>🔴 Regra de Ouro</h3>
+                <p style="font-size: 1.2em; color: #e74c3c; font-weight: bold;">NUNCA executar mudança sem passar por processo completo: REGISTRAR → ANALISAR → APROVAR → EXECUTAR → REGISTRAR</p>
+            </div>
+
+            <div class="card">
+                <h3>Mudanças Culturais Críticas</h3>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li><strong>ANTES:</strong> ❌ WhatsApp → <strong>AGORA:</strong> ✅ E-mail obrigatório</li>
+                    <li><strong>ANTES:</strong> ❌ Páginas soltas → <strong>AGORA:</strong> ✅ Projeto completo sempre</li>
+                    <li><strong>ANTES:</strong> ❌ Executa depois formaliza → <strong>AGORA:</strong> ✅ Formaliza → Aprova → Executa</li>
+                    <li><strong>ANTES:</strong> ❌ "Vamos tocar" → <strong>AGORA:</strong> ✅ PAUSA obrigatória para análise</li>
+                </ul>
+            </div>
+
+            <h3 class="subsection-title">🎯 2. TRÊS MARCOS VALIDADOS</h3>
+            <div class="card-grid">
+                <div class="card">
+                    <h3>Marco 1: Pré-Existência</h3>
+                    <p><strong>Quando:</strong> Antes demolição</p>
+                    <p><strong>O que:</strong> Relatório fotográfico completo + Cliente assina</p>
+                    <p><strong>Objetivo:</strong> Evitar conflitos sobre o que foi descartado</p>
+                </div>
+                <div class="card">
+                    <h3>Marco 2: Validações Técnicas</h3>
+                    <p><strong>Quando:</strong> Durante obra (cada POP)</p>
+                    <p><strong>O que:</strong> Cliente aprova ANTES executar (elétrica, gesso, pintura, piso...)</p>
+                    <p><strong>Objetivo:</strong> Evitar refazer</p>
+                </div>
+                <div class="card">
+                    <h3>Marco 3: Cobrança Extras</h3>
+                    <p><strong>Quando:</strong> Durante obra</p>
+                    <p><strong>O que:</strong> E-mail → Aprovação → Execução → Pagamento</p>
+                    <p><strong>Objetivo:</strong> Cronograma claro pagamento extras</p>
+                </div>
+            </div>
+
+            <h3 class="subsection-title">📋 3. ESCOPO PRESTADORES (2026)</h3>
+            <div class="card">
+                <h3>Nova Prática</h3>
+                <p><strong>Documento:</strong> ANO_VIGHA_OBRA_PRESTADOR-ESCOPO.pdf</p>
+                <p><strong>Estrutura:</strong> Planilha Excel com abas por serviço</p>
+                <p><strong>Assinatura:</strong> Prestador ASSINA antes iniciar</p>
+                <p><strong>Extras:</strong> Separados do escopo (aprovação antes executar)</p>
+            </div>
+
+            <h3 class="subsection-title">💰 4. COMPROVANTES & NOTAS FISCAIS</h3>
+            <div class="card">
+                <h3>Novo Controle</h3>
+                <p><strong>Comprovante:</strong> Enviado após cada pagamento</p>
+                <p><strong>Nota Fiscal:</strong> Prazo 7 dias após pagamento</p>
+                <p><strong>Bloqueio:</strong> Sem NF = Próximo pagamento bloqueado</p>
+                <p><strong>Reunião:</strong> Prestação contas se divergências</p>
+            </div>
+
+            <h3 class="subsection-title">🏁 5. DUPLA ENTREGA OBRA</h3>
+            <div class="card">
+                <h3>Entrega 1: Pré-Entrega (Antes terceiros)</h3>
+                <p>Vistoria completa + Fotos + E-mail cliente/arquiteto</p>
+                <p><strong>Objetivo:</strong> Proteger GAK de danos terceiros (marcenaria, pedras, boxes, ar, elevador)</p>
+            </div>
+            <div class="card">
+                <h3>Entrega 2: Entrega Final (Após terceiros)</h3>
+                <p>Vistoria final + Validação + Pasta entrega + Chaves</p>
+            </div>
+
+            <h3 class="subsection-title">⚡ 6. MELHORIA ELÉTRICA</h3>
+            <div class="card">
+                <h3>Primeira Semana Obra</h3>
+                <p><strong>Ação:</strong> Marcar TODOS pontos elétricos primeira semana</p>
+                <p><strong>Enviar:</strong> Marcação para arquiteto validar</p>
+                <p><strong>Benefício:</strong> Evita retrabalho enterrar pontos</p>
+            </div>
+        </div>
+
+        <!-- ABA DIAGNÓSTICO -->
+        <div id="diagnostico" class="tab-content">
+            <h2 class="section-title">📊 Diagnóstico Operacional</h2>
+            
+            <div class="alert alert-danger">
+                <strong>⚠️ Conclusão:</strong> Maturidade 2.5/5.0 = Funciona, mas com muito esforço e ansiedade da equipe
+            </div>
+
+            <h3 class="subsection-title">🔴 9 Problemas Identificados</h3>
+            
+            <div class="card">
+                <h3>Semana 0 - 4 Dores Originais</h3>
+                <ol style="margin-left: 20px; margin-top: 10px;">
+                    <li>Orçamentação com informações ocultas (nunca sabem se há lucro)</li>
+                    <li>Ausência ferramenta única visual (informações dispersas)</li>
+                    <li>Ausência fluxograma operacional (POPs existem mas sem timing)</li>
+                    <li>Papéis e responsabilidades indefinidos (conflitos diários)</li>
+                </ol>
+            </div>
+
+            <div class="card">
+                <h3>Semana 2 - 5 Problemas Estruturais</h3>
+                <ol style="margin-left: 20px; margin-top: 10px;">
+                    <li>Compras sem planejamento integrado cronograma</li>
+                    <li>Papéis sem clareza (definição prioridades P1/P2/P3)</li>
+                    <li>Revisões projeto "vamos tocar" (sem análise impacto)</li>
+                    <li>Atas não enviadas ou revisadas às pressas (240/ano)</li>
+                    <li>Lançamentos e arquivamento desorganizados</li>
+                </ol>
+            </div>
+
+            <h3 class="subsection-title">💡 3 Insights Estratégicos</h3>
+            <div class="card-grid">
+                <div class="card">
+                    <h3>1. Sobrecarga Thaiz</h3>
+                    <p>"Não tenho como estar na obra, cuidar cliente/arquiteto E lançar notas"</p>
+                    <p><strong>Dores:</strong> 100% compras, atas, gestão informações, técnico dia a dia</p>
+                </div>
+                <div class="card">
+                    <h3>2. Gargalo Guilherme</h3>
+                    <p>Atas esperam revisão → não revisa → não envia → problema</p>
+                    <p><strong>Solução:</strong> SLAs claros + Alçada Thaiz</p>
+                </div>
+                <div class="card">
+                    <h3>3. Custo Desorganização</h3>
+                    <p>Compras pressas, retrabalho, extras não cobrados, margem curta</p>
+                    <p><strong>Exemplo:</strong> Rev.03 cozinha = +R$ 1.600 perdido</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ABA MELHORIAS -->
+        <div id="melhorias" class="tab-content">
+            <h2 class="section-title">🚀 Melhorias Janeiro 2026</h2>
+            
+            <div class="alert alert-info">
+                <strong>🎯 Implementação:</strong> TODAS obras NOVAS a partir Janeiro 2026<br>
+                <strong>💰 Investimento:</strong> R$ 0,00 (ferramentas gratuitas)<br>
+                <strong>⏱️ Timeline:</strong> Semana 1-2 preparação + Semana 3 treinamento + Semana 4 piloto
+            </div>
+
+            <h3 class="subsection-title">🔴 P1 - Prioridade Máxima</h3>
+            <div class="card-grid">
+                <div class="card">
+                    <h3>1. Gestão de Mudanças (9 passos)</h3>
+                    <p><strong>Resolve:</strong> "Margem desaparece"</p>
+                    <p><strong>Protege:</strong> Margem >15%</p>
+                    <p><strong>Ferramentas:</strong> Forms + Planilhas + Templates e-mail</p>
+                </div>
+                <div class="card">
+                    <h3>2. Controle de Revisões (8 passos)</h3>
+                    <p><strong>Resolve:</strong> "Revisões não analisadas"</p>
+                    <p><strong>Previne:</strong> Casos Rev.03 (+R$ 1.600 perdido)</p>
+                    <p><strong>Ferramentas:</strong> Forms + Planilha histórico</p>
+                </div>
+            </div>
+
+            <h3 class="subsection-title">🟠 P2 - Prioridade Alta</h3>
+            <div class="card-grid">
+                <div class="card">
+                    <h3>3. Compras Integradas (6 passos)</h3>
+                    <p><strong>Resolve:</strong> "Compras desorganizadas"</p>
+                    <p><strong>Melhoria:</strong> Materiais 7 dias antes etapa</p>
+                </div>
+                <div class="card">
+                    <h3>4. Reuniões e Atas (5 passos)</h3>
+                    <p><strong>Resolve:</strong> "240 atas/ano não enviadas"</p>
+                    <p><strong>Meta:</strong> 100% atas <24h</p>
+                </div>
+                <div class="card">
+                    <h3>5. Escopo Prestadores</h3>
+                    <p><strong>Novo:</strong> Documento assinado</p>
+                    <p><strong>Extras:</strong> Separados e aprovados antes</p>
+                </div>
+            </div>
+
+            <h3 class="subsection-title">📊 Métricas de Sucesso</h3>
+            <div class="card-grid">
+                <div class="card">
+                    <h3>Gestão Mudanças</h3>
+                    <p>✅ % mudanças sem aprovação: 0%</p>
+                    <p>✅ Margem média: >15%</p>
+                </div>
+                <div class="card">
+                    <h3>Controle Revisões</h3>
+                    <p>✅ % revisões com impacto documentado: 100%</p>
+                </div>
+                <div class="card">
+                    <h3>Compras</h3>
+                    <p>✅ % materiais 7 dias antes: 100%</p>
+                </div>
+                <div class="card">
+                    <h3>Atas</h3>
+                    <p>✅ % atas enviadas <24h: 100%</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ABA MARCOS -->
+        <div id="marcos" class="tab-content">
+            <h2 class="section-title">🎯 Marcos do Projeto</h2>
+            
+            <div class="alert alert-success">
+                <strong>✅ VALIDADO 29/12:</strong> 3 marcos estruturais para todas obras
+            </div>
+
+            <h3 class="subsection-title">📋 Marco 1: Pré-Existência</h3>
+            <div class="card">
+                <h3>Quando</h3>
+                <p>ANTES da demolição (primeira atividade obra)</p>
+            </div>
+            <div class="card">
+                <h3>O Que Fazer</h3>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>Relatório fotográfico COMPLETO estado atual</li>
+                    <li>Listar: O que será DESCARTADO</li>
+                    <li>Listar: O que FICA no local</li>
+                    <li>Listar: O que SAI (cliente leva)</li>
+                    <li>Cliente ASSINA concordância</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h3>Objetivo</h3>
+                <p><strong>Proteger GAK:</strong> Evitar conflitos futuros sobre "onde está X" ou "por que descartaram Y"</p>
+                <p><strong>Responsável:</strong> Thaiz + Carlos (elaboram) + Cliente (assina)</p>
+            </div>
+
+            <h3 class="subsection-title">✅ Marco 2: Validações Técnicas</h3>
+            <div class="card">
+                <h3>Quando</h3>
+                <p>Durante obra - Para CADA processo que tem POP</p>
+            </div>
+            <div class="card">
+                <h3>Processos com Marco</h3>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li><strong>Elétrica:</strong> Validação pontos marcados + Foto</li>
+                    <li><strong>Gesso:</strong> Validação reforços + Foto</li>
+                    <li><strong>Pintura:</strong> Validação cor escolhida + Foto</li>
+                    <li><strong>Piso:</strong> Validação paginação definida + Foto</li>
+                    <li><strong>(E assim sucessivamente...)</strong></li>
+                </ul>
+            </div>
+            <div class="card">
+                <h3>Processo</h3>
+                <ol style="margin-left: 20px; margin-top: 10px;">
+                    <li>Responsável técnico obra: Foto + Descrição</li>
+                    <li>Thaiz: Envia e-mail cliente + arquiteto</li>
+                    <li>Cliente: Aprova formalmente (e-mail)</li>
+                    <li>DEPOIS aprovação: Executa</li>
+                </ol>
+            </div>
+            <div class="card">
+                <h3>Objetivo</h3>
+                <p><strong>Evitar refazer:</strong> Cliente aprova ANTES executar → Se mudar depois, é extra cobrado</p>
+                <p><strong>Responsável:</strong> Responsável Técnico Obra + Thaiz (formalização)</p>
+            </div>
+
+            <h3 class="subsection-title">💰 Marco 3: Cobrança Extras</h3>
+            <div class="card">
+                <h3>Quando</h3>
+                <p>Durante obra - Toda vez que houver extra</p>
+            </div>
+            <div class="card">
+                <h3>Processo (4 passos)</h3>
+                <ol style="margin-left: 20px; margin-top: 10px;">
+                    <li><strong>E-mail:</strong> Solicitação aprovação (custo + prazo)</li>
+                    <li><strong>Cliente:</strong> Aprova formalmente</li>
+                    <li><strong>GAK:</strong> Executa alteração</li>
+                    <li><strong>Cliente:</strong> PAGA (conforme cronograma acordado)</li>
+                </ol>
+            </div>
+            <div class="card">
+                <h3>Regra de Ouro</h3>
+                <p style="font-size: 1.1em; color: #e74c3c; font-weight: bold;">NÃO executar extra sem aprovação formal + definição pagamento</p>
+            </div>
+            <div class="card">
+                <h3>Objetivo</h3>
+                <p><strong>Proteger margem:</strong> Todo extra tem custo definido e aprovado ANTES executar</p>
+                <p><strong>Cronograma claro:</strong> Cliente sabe quando vai pagar</p>
+                <p><strong>Responsável:</strong> Thaiz (coordena) + Guilherme (valida valores)</p>
+            </div>
+        </div>
+
+<!-- ABA FEEDBACK -->
+        <div id="feedback" class="tab-content">
+            <h2 class="section-title">💬 Feedback - Melhorias e Problemas</h2>
+            
+            <div class="alert alert-info">
+                <strong>📌 Objetivo:</strong> Este espaço é para você registrar melhorias que identificou nos processos ou problemas recorrentes que estão acontecendo nas obras. Seu feedback é essencial para melhorarmos continuamente!
+            </div>
+
+            <div class="alert alert-success">
+                <strong>✅ Como funciona:</strong><br>
+                1. Preencha o formulário abaixo<br>
+                2. Seu feedback será registrado e analisado<br>
+                3. Raul e a equipe avaliarão e priorizarão as ações<br>
+                4. Você receberá retorno sobre sua sugestão
+            </div>
+
+            <!-- FORMULÁRIO -->
+            <div class="feedback-form">
+                <h3 style="color: #667eea; margin-bottom: 20px;">📝 Registrar Novo Feedback</h3>
+                
+                <form id="feedbackForm" onsubmit="submitFeedback(event)">
+                    <!-- TIPO -->
+                    <div class="form-group">
+                        <label>Tipo de Registro <span class="required">*</span></label>
+                        <div class="radio-group">
+                            <div class="radio-option">
+                                <input type="radio" id="tipoMelhoria" name="tipo" value="melhoria" required>
+                                <label for="tipoMelhoria">💡 Melhoria de Processo</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="tipoProblema" name="tipo" value="problema" required>
+                                <label for="tipoProblema">⚠️ Problema Recorrente</label>
+                            </div>
+                        </div>
+                        <small>Selecione se é uma sugestão de melhoria ou um problema que se repete</small>
+                    </div>
+
+                    <!-- NOME -->
+                    <div class="form-group">
+                        <label for="nome">Seu Nome <span class="required">*</span></label>
+                        <input type="text" id="nome" name="nome" placeholder="Ex: Thaiz Benz" required>
+                    </div>
+
+                    <!-- PROCESSO RELACIONADO -->
+                    <div class="form-group">
+                        <label for="processo">Processo Relacionado</label>
+                        <select id="processo" name="processo">
+                            <option value="">-- Selecione (opcional) --</option>
+                            <option value="orcamentacao">0. Orçamentação</option>
+                            <option value="inicio-obra">1. Início de Obra</option>
+                            <option value="revisao-projeto">2. Revisão de Projeto</option>
+                            <option value="demolicao-civil">3. Demolição + Civil</option>
+                            <option value="hidraulica">4. Hidráulica</option>
+                            <option value="finalizacao">5. Finalização de Obra</option>
+                            <option value="gestao-mudancas">6. Gestão de Mudanças</option>
+                            <option value="geral">Geral (não específico)</option>
+                        </select>
+                        <small>Se aplicável, indique qual processo está relacionado</small>
+                    </div>
+
+                    <!-- TÍTULO -->
+                    <div class="form-group">
+                        <label for="titulo">Título/Resumo <span class="required">*</span></label>
+                        <input type="text" id="titulo" name="titulo" placeholder="Ex: Compras atrasam por falta de cronograma" required>
+                        <small>Resuma em uma frase</small>
+                    </div>
+
+                    <!-- DESCRIÇÃO -->
+                    <div class="form-group">
+                        <label for="descricao">Descrição Detalhada <span class="required">*</span></label>
+                        <textarea id="descricao" name="descricao" placeholder="Descreva o problema ou melhoria em detalhes:&#10;&#10;• O que está acontecendo?&#10;• Com que frequência?&#10;• Qual o impacto?&#10;• Tem sugestão de solução?" required></textarea>
+                        <small>Quanto mais detalhes, melhor poderemos ajudar</small>
+                    </div>
+
+                    <!-- FREQUÊNCIA (APENAS PARA PROBLEMAS) -->
+                    <div class="form-group" id="frequenciaGroup" style="display: none;">
+                        <label for="frequencia">Com que frequência acontece?</label>
+                        <select id="frequencia" name="frequencia">
+                            <option value="raro">Raramente (1-2 vezes)</option>
+                            <option value="ocasional">Ocasionalmente (mensal)</option>
+                            <option value="frequente">Frequentemente (semanal)</option>
+                            <option value="sempre">Sempre (toda obra)</option>
+                        </select>
+                    </div>
+
+                    <!-- PRIORIDADE -->
+                    <div class="form-group">
+                        <label>Prioridade (sua percepção)</label>
+                        <div class="priority-buttons">
+                            <button type="button" class="priority-btn baixa" onclick="selectPriority('baixa')">
+                                🟢 Baixa
+                            </button>
+                            <button type="button" class="priority-btn media" onclick="selectPriority('media')">
+                                🟡 Média
+                            </button>
+                            <button type="button" class="priority-btn alta" onclick="selectPriority('alta')">
+                                🔴 Alta
+                            </button>
+                        </div>
+                        <input type="hidden" id="prioridade" name="prioridade" value="media">
+                        <small>Baixa = Pode esperar | Média = Importante | Alta = Urgente</small>
+                    </div>
+
+                    <!-- IMPACTO FINANCEIRO -->
+                    <div class="form-group">
+                        <label for="impacto">Tem impacto financeiro?</label>
+                        <div class="radio-group">
+                            <div class="radio-option">
+                                <input type="radio" id="impactoSim" name="impacto" value="sim">
+                                <label for="impactoSim">Sim, gera custo ou perda de receita</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="impactoNao" name="impacto" value="nao" checked>
+                                <label for="impactoNao">Não tem impacto financeiro direto</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- OBRA EXEMPLO (OPCIONAL) -->
+                    <div class="form-group">
+                        <label for="obra">Obra Exemplo (opcional)</label>
+                        <input type="text" id="obra" name="obra" placeholder="Ex: Apartamento Silva - Centro">
+                        <small>Se aconteceu em obra específica, informe para contexto</small>
+                    </div>
+
+                    <!-- SUBMIT -->
+                    <button type="submit" class="btn-submit">
+                        📤 Enviar Feedback
+                    </button>
+                </form>
+            </div>
+
+            <!-- MENSAGEM SUCESSO -->
+            <div class="success-message" id="successMessage">
+                <h3 style="color: #28a745; margin-bottom: 10px;">✅ Feedback Registrado com Sucesso!</h3>
+                <p>Obrigado por contribuir! Seu feedback foi registrado e será analisado pela equipe.</p>
+                <p style="margin-top: 15px;">
+                    <button class="btn-submit" onclick="closeSuccessMessage()" style="width: auto; padding: 10px 30px;">
+                        Registrar Outro Feedback
+                    </button>
+                </p>
+            </div>
+
+            <!-- HISTÓRICO (EXEMPLO) -->
+            <div class="feedback-history">
+                <h3 class="subsection-title">📋 Feedbacks Registrados (Exemplo)</h3>
+                
+                <div class="alert alert-warning">
+                    <strong>💡 Nota:</strong> Em produção, esta seção mostrará todos os feedbacks registrados pela equipe. Os exemplos abaixo são apenas para demonstração.
+                </div>
+
+                <!-- EXEMPLO 1 -->
+                <div class="feedback-item problema">
+                    <div class="feedback-header">
+                        <div>
+                            <h4 style="color: #e74c3c; margin-bottom: 5px;">⚠️ Materiais chegam atrasados</h4>
+                            <div class="feedback-meta">
+                                <span>👤 Thaiz Benz</span>
+                                <span>📅 28/12/2025</span>
+                                <span>🔄 Processo: Compras</span>
+                            </div>
+                        </div>
+                        <span class="priority-badge alta">🔴 Alta</span>
+                    </div>
+                    <p style="margin-top: 10px; color: #2c3e50;">
+                        Materiais frequentemente chegam 1-2 dias após prazo combinado com fornecedor, atrasando obra. Acontece em ~60% das compras. Sugestão: criar buffer de 2 dias no cronograma ou trocar fornecedores críticos.
+                    </p>
+                </div>
+
+                <!-- EXEMPLO 2 -->
+                <div class="feedback-item melhoria">
+                    <div class="feedback-header">
+                        <div>
+                            <h4 style="color: #27ae60; margin-bottom: 5px;">💡 Automatizar lembretes atas</h4>
+                            <div class="feedback-meta">
+                                <span>👤 Carlos Luz</span>
+                                <span>📅 27/12/2025</span>
+                                <span>🔄 Processo: Reuniões e Atas</span>
+                            </div>
+                        </div>
+                        <span class="priority-badge media">🟡 Média</span>
+                    </div>
+                    <p style="margin-top: 10px; color: #2c3e50;">
+                        Podemos usar Google Calendar para enviar lembrete automático 24h após reunião se ata não foi enviada. Isso evitaria esquecimentos e garantiria 100% atas enviadas no prazo.
+                    </p>
+                </div>
+
+                <!-- EXEMPLO 3 -->
+                <div class="feedback-item problema">
+                    <div class="feedback-header">
+                        <div>
+                            <h4 style="color: #e74c3c; margin-bottom: 5px;">⚠️ Prestadores trabalham com versão errada projeto</h4>
+                            <div class="feedback-meta">
+                                <span>👤 Thaiz Benz</span>
+                                <span>📅 26/12/2025</span>
+                                <span>🔄 Processo: Gestão de Mudanças</span>
+                            </div>
+                        </div>
+                        <span class="priority-badge alta">🔴 Alta</span>
+                    </div>
+                    <p style="margin-top: 10px; color: #2c3e50;">
+                        Obra Apartamento Silva: Gesseiro trabalhou com Rev.02 quando já estava Rev.04. Tivemos que refazer teto inteiro. Custo: +R$ 2.800. Frequência: Acontece 2-3 vezes por ano. Solução implementada: Processo Gestão Mudanças com confirmação obrigatória.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ABA D
+        <!-- ABA DOCUMENTOS -->
+        <div id="documentos" class="tab-content">
+            <h2 class="section-title">📄 Documentos do Projeto</h2>
+            
+            <h3 class="subsection-title">🔄 Fluxogramas BPMN (7 processos)</h3>
+            <div class="card-grid">
+                <div class="card">
+                    <h3>💰 Orçamentação</h3>
+                    <p>POP_Orcamentacao_BPMN_Swimlanes.html</p>
+                </div>
+                <div class="card">
+                    <h3>🏗️ Início de Obra</h3>
+                    <p>POP_Inicio_Obra_Swimlanes_Visuais.html</p>
+                </div>
+                <div class="card">
+                    <h3>📋 Revisão Projeto</h3>
+                    <p>POP_Revisao_Projeto_BPMN_Swimlanes.html</p>
+                </div>
+                <div class="card">
+                    <h3>🔨 Demolição + Civil</h3>
+                    <p>POP_Demolicao_Civil_BPMN_Swimlanes.html</p>
+                </div>
+                <div class="card">
+                    <h3>💧 Hidráulica</h3>
+                    <p>POP_Hidraulica_BPMN_Swimlanes.html</p>
+                </div>
+                <div class="card">
+                    <h3>🎉 Finalização</h3>
+                    <p>POP_Finalizacao_Obra_BPMN_Swimlanes.html</p>
+                </div>
+                <div class="card" style="background: #d4edda;">
+                    <h3>🔄 Gestão Mudanças 🆕</h3>
+                    <p>POP_Gestao_Mudancas_BPMN_Completo.html</p>
+                </div>
+            </div>
+
+            <h3 class="subsection-title">📊 Relatórios</h3>
+            <div class="card-grid">
+                <div class="card">
+                    <h3>Relatório Semana 0</h3>
+                    <p>Diagnóstico validado + Maturidade 2.5/5.0</p>
+                </div>
+                <div class="card">
+                    <h3>Relatório Semana 2</h3>
+                    <p>5 problemas estruturais + Padrões</p>
+                </div>
+                <div class="card">
+                    <h3>Atualizações Reunião 29/12</h3>
+                    <p>Gestão Mudanças validada + Marcos</p>
+                </div>
+            </div>
+
+            <h3 class="subsection-title">📋 Materiais Criados</h3>
+            <div class="card">
+                <h3>Forms Google (2)</h3>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>Form Análise Impacto Mudança</li>
+                    <li>Form Análise Impacto Revisão</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h3>Planilhas Excel (4)</h3>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>Planilha Histórico Revisões</li>
+                    <li>Planilha Alterações-Extras (compartilhada arquiteto)</li>
+                    <li>Planilha Controle NF Prestadores</li>
+                    <li>Planilha Controle Comunicação Prestadores</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h3>Templates E-mail (6)</h3>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>E-mail Cliente - Impacto Cronograma</li>
+                    <li>E-mail Cliente - Impacto Custo</li>
+                    <li>E-mail Arquiteto - Custo Alteração</li>
+                    <li>E-mail Prestadores - Nova Revisão</li>
+                    <li>E-mail Cliente - Mudança Aprovada</li>
+                    <li>E-mail Cliente - Mudança Rejeitada</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            var i, tabcontent, tabs;
+            
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].classList.remove("active");
+            }
+            
+            tabs = document.getElementsByClassName("tab");
+            for (i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove("active");
+            }
+            
+            document.getElementById(tabName).classList.add("active");
+            if (evt && evt.currentTarget) {
+                evt.currentTarget.classList.add("active");
+            }
+            
+            window.scrollTo(0, 0);
+        }
+    </script>
+
+    <div style="text-align: center; margin: 30px; padding: 20px; background: white; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+        <p style="color: #7f8c8d; font-size: 0.9em;">
+            <strong>GAK Construtora</strong> | Portal Integrado Processos v2.1 COMPLETA<br>
+            Última atualização: 29 Dezembro 2025<br>
+            Consultor: Raul | Metodologia: CORE | Implementação: Janeiro 2026
+        </p>
+    </div>
+</body>
+</html>
