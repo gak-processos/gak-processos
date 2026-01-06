@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BPMN - POP Revisão de Projeto GAK</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f2f5;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .header h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .header .subtitle {
+            color: #7f8c8d;
+            font-size: 1.1em;
+        }
+        
+        .swimlane-container {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .phase-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 30px;
+            font-size: 1.3em;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .swimlane {
+            display: grid;
+            grid-template-columns: 150px 1fr;
+            border-bottom: 2px solid #e0e0e0;
+            min-height: 100px;
+        }
+        
+        .swimlane:last-child {
+            border-bottom: none;
+        }
+        
+        .swimlane-label {
+            background: #34495e;
+            color: white;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.1em;
+            text-align: center;
+            border-right: 3px solid #2c3e50;
+        }
+        
+        .swimlane-content {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            overflow-x: auto;
+            background: #fafafa;
+        }
+        
+        .bpmn-element {
+            flex-shrink: 0;
+            text-align: center;
+            position: relative;
+        }
+        
+        .event {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 3px solid #2c3e50;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7em;
+            font-weight: bold;
+            padding: 5px;
+        }
+        
+        .event.start {
+            border-color: #27ae60;
+            color: #27ae60;
+        }
+        
+        .event.end {
+            border: 5px double #e74c3c;
+            color: #e74c3c;
+        }
+        
+        .task {
+            min-width: 140px;
+            max-width: 200px;
+            padding: 15px;
+            border: 2px solid #2c3e50;
+            border-radius: 8px;
+            background: #FFE4B5;
+            border-color: #FF8C00;
+            font-size: 0.85em;
+            line-height: 1.3;
+        }
+        
+        .gateway {
+            width: 60px;
+            height: 60px;
+            background: #FFE4B5;
+            border: 3px solid #FF8C00;
+            transform: rotate(45deg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .gateway.exclusive::before {
+            content: '×';
+            font-size: 2em;
+            font-weight: bold;
+            transform: rotate(-45deg);
+        }
+        
+        .arrow {
+            width: 40px;
+            height: 2px;
+            background: #2c3e50;
+            position: relative;
+            flex-shrink: 0;
+        }
+        
+        .arrow::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: -4px;
+            width: 0;
+            height: 0;
+            border-left: 10px solid #2c3e50;
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+        }
+        
+        .label {
+            position: absolute;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap;
+            font-size: 0.75em;
+            color: #7f8c8d;
+            background: #fafafa;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        
+        .info-box {
+            background: #e8f4f8;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin: 20px;
+            border-radius: 5px;
+        }
+        
+        .checklist {
+            background: white;
+            padding: 20px;
+            margin: 20px;
+            border-radius: 10px;
+            border: 2px solid #e0e0e0;
+        }
+        
+        .checklist h3 {
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+        
+        .checklist-item {
+            display: grid;
+            grid-template-columns: 150px 1fr 120px;
+            gap: 15px;
+            padding: 10px;
+            border-bottom: 1px solid #e0e0e0;
+            align-items: center;
+        }
+        
+        .checklist-item:last-child {
+            border-bottom: none;
+        }
+        
+        .item-code {
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .item-question {
+            color: #2c3e50;
+        }
+        
+        .item-status {
+            text-align: center;
+        }
+        
+        @media print {
+            body {
+                background: white;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📋 POP REVISÃO DE PROJETO - BPMN 2.0</h1>
+        <p class="subtitle">GAK Construtora | Fluxograma com Responsabilidades</p>
+    </div>
+
+    <!-- FLUXOGRAMA BPMN -->
+    <div class="swimlane-container">
+        <div class="phase-header">
+            🔍 PROCESSO DE REVISÃO DE PROJETO
+        </div>
+
+        <!-- SWIMLANE: THAIZ -->
+        <div class="swimlane">
+            <div class="swimlane-label">
+                👩‍💼<br>THAIZ<br><small>(Gerente Projetos)</small>
+            </div>
+            <div class="swimlane-content">
+                <div class="bpmn-element">
+                    <div class="event start">Revisão Projeto Recebida</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task">Registrar Recebimento Revisão</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task">Aplicar Checklist 13 Perguntas</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task">Consolidar Respostas</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task">Encaminhar para Carlos</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SWIMLANE: CARLOS -->
+        <div class="swimlane">
+            <div class="swimlane-label">
+                🏗️<br>CARLOS<br><small>(Arquiteto)</small>
+            </div>
+            <div class="swimlane-content">
+                <div style="width: 600px;"></div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task">Analisar Tecnicamente Revisão</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task">Validar Respostas Checklist</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="gateway exclusive">
+                        <div class="label">Aprovado?</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SWIMLANE: CARLOS (Divergência) -->
+        <div class="swimlane">
+            <div class="swimlane-label">
+                🏗️<br>CARLOS
+            </div>
+            <div class="swimlane-content">
+                <div style="width: 940px;"></div>
+                <div style="font-size: 0.8em; color: #e74c3c; font-weight: bold;">NÃO ↓</div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task">Solicitar Correções Arquiteto</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div style="font-size: 0.8em; color: #7f8c8d; font-weight: bold;">Aguarda Correção</div>
+            </div>
+        </div>
+
+        <!-- SWIMLANE: THAIZ (Aprovado) -->
+        <div class="swimlane">
+            <div class="swimlane-label">
+                👩‍💼<br>THAIZ
+            </div>
+            <div class="swimlane-content">
+                <div style="width: 940px;"></div>
+                <div style="font-size: 0.8em; color: #27ae60; font-weight: bold;">SIM ↓</div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task">Comunicar TODOS Prestadores</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task">Atualizar Projeto Drive</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task">Imprimir Versão Assinada</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task">Distribuir Projeto In Loco</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SWIMLANE: PRESTADORES -->
+        <div class="swimlane">
+            <div class="swimlane-label">
+                👷<br>PRESTADORES
+            </div>
+            <div class="swimlane-content">
+                <div style="width: 1090px;"></div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task">Confirmar Recebimento Revisão</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task">Atualizar Trabalho Conforme Revisão</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SWIMLANE: THAIZ (Fechamento) -->
+        <div class="swimlane">
+            <div class="swimlane-label">
+                👩‍💼<br>THAIZ
+            </div>
+            <div class="swimlane-content">
+                <div style="width: 1430px;"></div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task">Registrar Revisão em Histórico</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="event end">Revisão Implementada</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CHECKLIST 13 PERGUNTAS -->
+    <div class="checklist">
+        <h3>📋 CHECKLIST - 13 PERGUNTAS TÉCNICAS</h3>
+        
+        <div class="checklist-item">
+            <div class="item-code">GE</div>
+            <div class="item-question">Gesso convencional ou acartonado?</div>
+            <div class="item-status">□</div>
+        </div>
+        
+        <div class="checklist-item">
+            <div class="item-code">CV</div>
+            <div class="item-question">Vai ter mureta nos banheiros?</div>
+            <div class="item-status">□</div>
+        </div>
+        
+        <div class="checklist-item">
+            <div class="item-code">CV+REV</div>
+            <div class="item-question">Mureta vai ser revestida ou em pedra?</div>
+            <div class="item-status">□</div>
+        </div>
+        
+        <div class="checklist-item">
+            <div class="item-code">CV+EL</div>
+            <div class="item-question">Vai ter ventokit?</div>
+            <div class="item-status">□</div>
+        </div>
+        
+        <div class="checklist-item">
+            <div class="item-code">EL+HI</div>
+            <div class="item-question">Tipo de chuveiro?</div>
+            <div class="item-status">□</div>
+        </div>
+        
+        <div class="checklist-item">
+            <div class="item-code">CV</div>
+            <div class="item-question">Tipo de ralo convencional ou linear?</div>
+            <div class="item-status">□</div>
+        </div>
+        
+        <div class="checklist-item">
+            <div class="item-code">HI</div>
+            <div class="item-question">Acionamento sanitário hidra ou caixa acoplada?</div>
+            <div class="item-status">□</div>
+        </div>
+        
+        <div class="checklist-item">
+            <div class="item-code">HI</div>
+            <div class="item-question">Previsão de ducha higiênica?</div>
+            <div class="item-status">□</div>
+        </div>
+        
+        <div class="checklist-item">
+            <div class="item-code">HI</div>
+            <div class="item-question">Previsão de aquecedor de passagem?</div>
+            <div class="item-status">□</div>
+        </div>
+        
+        <div class="checklist-item">
+            <div class="item-code">CV+GE</div>
+            <div class="item-question">Coifa ou depurador?</div>
+            <div class="item-status">□</div>
+        </div>
+        
+        <div class="checklist-item">
+            <div class="item-code">CV</div>
+            <div class="item-question">Fogão de indução?</div>
+            <div class="item-status">□</div>
+        </div>
+        
+        <div class="checklist-item">
+            <div class="item-code">CV+EL</div>
+            <div class="item-question">Pontos de LED são conduítes ou caixa?</div>
+            <div class="item-status">□</div>
+        </div>
+        
+        <div class="checklist-item">
+            <div class="item-code">CV+</div>
+            <div class="item-question">Qual altura de rodapé?</div>
+            <div class="item-status">□</div>
+        </div>
+    </div>
+
+    <div class="info-box">
+        <h3>📊 Resumo Swimlanes</h3>
+        <p><strong>👩‍💼 THAIZ:</strong> Recebe revisão, aplica checklist, coordena comunicação, atualiza documentos</p>
+        <p><strong>🏗️ CARLOS:</strong> Análise técnica, validação, aprovação/reprovação</p>
+        <p><strong>👷 PRESTADORES:</strong> Confirmam recebimento, atualizam trabalho conforme revisão</p>
+        <p><strong>📐 ARQUITETO (externo):</strong> Corrige se necessário</p>
+    </div>
+
+    <div class="info-box" style="background: #fff3cd; border-left-color: #ffc107;">
+        <h3>⚠️ PONTO CRÍTICO</h3>
+        <p><strong>Problema atual (das reuniões):</strong> "Revisões NÃO são revisadas, decidem VAMOS TOCAR, impacto grande no final"</p>
+        <p><strong>Solução:</strong> Este fluxo força pausa obrigatória para análise antes de executar. Carlos DEVE aprovar tecnicamente antes de Thaiz comunicar prestadores.</p>
+    </div>
+
+    <div style="margin-top: 20px; padding: 15px; background: white; border-radius: 10px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+        <button onclick="window.print()" style="padding: 12px 30px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 8px; font-size: 1.1em; font-weight: bold; cursor: pointer;">
+            🖨️ Imprimir Fluxograma
+        </button>
+    </div>
+</body>
+</html>

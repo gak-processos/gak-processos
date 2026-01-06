@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Processo Gestão de Mudanças - BPMN</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+        }
+        
+        .header h1 {
+            color: #2c3e50;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header .subtitle {
+            color: #7f8c8d;
+            font-size: 1.2em;
+        }
+        
+        .header .info {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            display: inline-block;
+        }
+        
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid;
+        }
+        
+        .alert-info {
+            background: #e8f4f8;
+            border-color: #3498db;
+            color: #2c3e50;
+        }
+        
+        .alert-warning {
+            background: #fff3cd;
+            border-color: #f39c12;
+            color: #2c3e50;
+        }
+        
+        .alert-danger {
+            background: #ffe6e6;
+            border-color: #e74c3c;
+            color: #2c3e50;
+        }
+        
+        .alert-success {
+            background: #d4edda;
+            border-color: #28a745;
+            color: #2c3e50;
+        }
+        
+        .bpmn-diagram {
+            background: #f8f9fa;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 30px;
+            margin: 30px 0;
+            overflow-x: auto;
+        }
+        
+        .swimlane {
+            background: white;
+            border: 2px solid #34495e;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            min-height: 120px;
+            position: relative;
+        }
+        
+        .swimlane-header {
+            background: #34495e;
+            color: white;
+            padding: 15px;
+            font-weight: bold;
+            border-radius: 6px 6px 0 0;
+            font-size: 1.1em;
+        }
+        
+        .swimlane-content {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            min-height: 100px;
+        }
+        
+        .bpmn-element {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 15px;
+            font-size: 0.9em;
+            transition: transform 0.2s;
+        }
+        
+        .bpmn-element:hover {
+            transform: scale(1.05);
+            z-index: 10;
+        }
+        
+        .event-start {
+            width: 60px;
+            height: 60px;
+            border: 3px solid #27ae60;
+            border-radius: 50%;
+            background: #d4edda;
+            color: #27ae60;
+            font-weight: bold;
+        }
+        
+        .event-end {
+            width: 60px;
+            height: 60px;
+            border: 4px solid #27ae60;
+            border-radius: 50%;
+            background: #27ae60;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .activity {
+            min-width: 150px;
+            padding: 15px 20px;
+            border: 2px solid #3498db;
+            border-radius: 8px;
+            background: white;
+            color: #2c3e50;
+        }
+        
+        .activity-critical {
+            border: 3px solid #e74c3c;
+            background: #ffe6e6;
+            font-weight: bold;
+        }
+        
+        .gateway {
+            width: 70px;
+            height: 70px;
+            border: 3px solid #f39c12;
+            background: #fff3cd;
+            transform: rotate(45deg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .gateway-text {
+            transform: rotate(-45deg);
+            font-size: 0.85em;
+            font-weight: bold;
+            color: #f39c12;
+            text-align: center;
+            max-width: 60px;
+        }
+        
+        .arrow {
+            color: #7f8c8d;
+            font-size: 2em;
+            margin: 0 5px;
+        }
+        
+        .phase-title {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            font-size: 1.3em;
+            font-weight: bold;
+            margin: 30px 0 20px 0;
+            text-align: center;
+        }
+        
+        .legend {
+            background: #f8f9fa;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 30px;
+        }
+        
+        .legend h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+        
+        .legend-icon {
+            min-width: 80px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85em;
+        }
+        
+        .note {
+            background: #fff3cd;
+            border-left: 4px solid #f39c12;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .note strong {
+            color: #f39c12;
+        }
+        
+        .critical-box {
+            background: #ffe6e6;
+            border: 3px solid #e74c3c;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .critical-box h4 {
+            color: #e74c3c;
+            margin-bottom: 10px;
+        }
+        
+        .rules-box {
+            background: #e8f4f8;
+            border: 2px solid #3498db;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .rules-box h4 {
+            color: #3498db;
+            margin-bottom: 10px;
+        }
+        
+        .timeline {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 20px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .timeline-item {
+            padding: 10px 15px;
+            background: white;
+            border: 2px solid #667eea;
+            border-radius: 5px;
+            font-size: 0.9em;
+        }
+        
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            .container {
+                box-shadow: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔄 PROCESSO: GESTÃO DE MUDANÇAS</h1>
+            <p class="subtitle">Controle de Alterações em Projetos de Obra</p>
+            <div class="info">
+                <strong>Versão:</strong> 1.0 | 
+                <strong>Data:</strong> Janeiro 2026 | 
+                <strong>Status:</strong> Validado para Implementação
+            </div>
+        </div>
+
+        <div class="alert alert-danger">
+            <strong>🛑 REGRA DE OURO:</strong><br>
+            NUNCA executar mudança sem passar por este processo completo. Toda alteração deve ser: REGISTRADA → ANALISADA → APROVADA → EXECUTADA → REGISTRADA.
+        </div>
+
+        <div class="alert alert-info">
+            <strong>📌 OBJETIVO:</strong> Proteger margem da obra, evitar retrabalhos, garantir que cliente pague por mudanças que solicita, e manter histórico rastreável de todas alterações.
+        </div>
+
+        <div class="critical-box">
+            <h4>🔴 MUDANÇAS CULTURAIS CRÍTICAS:</h4>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li><strong>ANTES:</strong> ❌ Mudanças via WhatsApp → <strong>AGORA:</strong> ✅ Só E-MAIL formal</li>
+                <li><strong>ANTES:</strong> ❌ Executar depois formalizar → <strong>AGORA:</strong> ✅ Formalizar → Aprovar → EXECUTAR</li>
+                <li><strong>ANTES:</strong> ❌ Páginas soltas projeto → <strong>AGORA:</strong> ✅ SEMPRE projeto completo</li>
+                <li><strong>ANTES:</strong> ❌ "Vamos tocar" sem análise → <strong>AGORA:</strong> ✅ PAUSA obrigatória para análise</li>
+            </ul>
+        </div>
+
+        <!-- ETAPA 0 -->
+        <div class="phase-title">ETAPA 0: BASELINE - PROJETO INICIAL</div>
+        
+        <div class="note">
+            <strong>⚠️ IMPORTANTE:</strong> Esta etapa acontece ANTES do início da obra, durante fechamento do contrato.
+        </div>
+
+        <div class="bpmn-diagram">
+            <div class="swimlane">
+                <div class="swimlane-header">ARQUITETO</div>
+                <div class="swimlane-content">
+                    <div class="bpmn-element event-start">INÍCIO</div>
+                    <span class="arrow">→</span>
+                    <div class="bpmn-element activity">
+                        Formaliza Projeto Inicial por E-mail<br>
+                        <small>(Data, Hora, Versão)</small>
+                    </div>
+                    <span class="arrow">→</span>
+                </div>
+            </div>
+
+            <div class="swimlane">
+                <div class="swimlane-header">GUILHERME (CEO)</div>
+                <div class="swimlane-content">
+                    <div class="bpmn-element activity">
+                        Recebe Projeto<br>
+                        <small>(Confirma recebimento)</small>
+                    </div>
+                    <span class="arrow">→</span>
+                </div>
+            </div>
+
+            <div class="swimlane">
+                <div class="swimlane-header">THAIZ (GERENTE)</div>
+                <div class="swimlane-content">
+                    <div class="bpmn-element activity-critical">
+                        Registra BASELINE<br>
+                        <small>(Data/Hora no Contrato)</small>
+                    </div>
+                    <span class="arrow">→</span>
+                    <div class="bpmn-element activity">
+                        Armazena Drive<br>
+                        <small>(Pasta: Projetos/Rev.00)</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="rules-box">
+            <h4>📋 OBJETIVO BASELINE:</h4>
+            <p>Estabelecer "foto inicial" do projeto. Qualquer mudança posterior = alteração formal que passa por este processo.</p>
+            <p><strong>Cláusula Contrato:</strong> "Projeto recebido em [DATA] às [HORA] - Versão Rev.00"</p>
+        </div>
+
+        <!-- ETAPA 1 -->
+        <div class="phase-title">ETAPA 1: RECEBIMENTO DE ALTERAÇÕES</div>
+
+        <div class="bpmn-diagram">
+            <div class="swimlane">
+                <div class="swimlane-header">CLIENTE / ARQUITETO</div>
+                <div class="swimlane-content">
+                    <div class="bpmn-element event-start">MUDANÇA<br>SOLICITADA</div>
+                    <span class="arrow">→</span>
+                    <div class="bpmn-element gateway">
+                        <div class="gateway-text">Quem?</div>
+                    </div>
+                    <span class="arrow">→</span>
+                </div>
+            </div>
+
+            <div class="swimlane">
+                <div class="swimlane-header">THAIZ (GERENTE)</div>
+                <div class="swimlane-content">
+                    <div class="bpmn-element activity-critical">
+                        Registra ATA<br>
+                        <small>(Descrição mudança)</small>
+                    </div>
+                    <span class="arrow">→</span>
+                    <div class="bpmn-element activity">
+                        Envia E-mail<br>ARQUITETO<br>
+                        <small>(Solicita validação)</small>
+                    </div>
+                    <span class="arrow">→</span>
+                </div>
+            </div>
+
+            <div class="swimlane">
+                <div class="swimlane-header">ARQUITETO</div>
+                <div class="swimlane-content">
+                    <div class="bpmn-element activity">
+                        Valida Mudança<br>
+                        <small>(Análise técnica)</small>
+                    </div>
+                    <span class="arrow">→</span>
+                    <div class="bpmn-element activity-critical">
+                        Envia PROJETO<br>COMPLETO Rev.XX<br>
+                        <small>(NUNCA páginas soltas!)</small>
+                    </div>
+                    <span class="arrow">→</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="critical-box">
+            <h4>🔴 REGRAS ETAPA 1:</h4>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li><strong>Canal:</strong> SOMENTE E-MAIL (não aceitar WhatsApp)</li>
+                <li><strong>Projeto:</strong> SEMPRE completo, NUNCA páginas soltas</li>
+                <li><strong>Motivo:</strong> Evita risco páginas erradas no processo</li>
+                <li><strong>Exemplo:</strong> Se mudou só revestimento → Envia TODAS as pranchas mesmo assim</li>
+            </ul>
+        </div>
+
+        <!-- ETAPA 2 -->
+        <div class="phase-title">ETAPA 2: VALIDAÇÃO DO PROJETO ATUALIZADO</div>
+
+        <div class="bpmn-diagram">
+            <div class="swimlane">
+                <div class="swimlane-header">THAIZ + ESTAGIÁRIO</div>
+                <div class="swimlane-content">
+                    <div class="bpmn-element activity">
+                        Recebe Projeto<br>Rev.XX
+                    </div>
+                    <span class="arrow">→</span>
+                    <div class="bpmn-element activity">
+                        Confere Alterações<br>
+                        <small>(O que mudou?)</small>
+                    </div>
+                    <span class="arrow">→</span>
+                    <div class="bpmn-element activity">
+                        Verifica Completude<br>
+                        <small>(Todas pranchas?)</small>
+                    </div>
+                    <span class="arrow">→</span>
+                    <div class="bpmn-element activity-critical">
+                        Preenche Planilha<br>HISTÓRICO REVISÕES<br>
+                        <small>(Data, Rev, Mudanças)</small>
+                    </div>
+                    <span class="arrow">→</span>
+                    <div class="bpmn-element activity">
+                        Armazena Drive<br>
+                        <small>(Pasta: Projetos/Rev.XX)</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="timeline">
+            <strong>⏱️ Prazo:</strong>
+            <div class="timeline-item">Validação: 4h (urgente) ou 24h (normal)</div>
+        </div>
+
+        <!-- ETAPA 3 -->
+        <div class="phase-title">ETAPA 3: LEVAR PROJETO PARA OBRA</div>
+
+        <div class="note">
+            <strong>⚠️ IMPORTANTE:</strong> Responsável Técnico MUDA de obra para obra (pode ser Carlos ou outro profissional designado).
+        </div>
+
+        <div class="bpmn-diagram">
+            <div class="swimlane">
+                <div class="swimlane-header">THAIZ (GERENTE)</div>
+                <div class="swimlane-content">
+                    <div class="bpmn-element activity">
+                        Imprime Projeto<br>Completo Rev.XX
+                    </div>
+                    <span class="arrow">→</span>
+                    <div class="bpmn-element activity">
+                        Leva para Obra<br>
+                        <small>(Físico + Digital)</small>
+                    </div>
+                    <span class="arrow">→</span>
+                </div>
+            </div>
+
+            <div class="swimlane">
+                <div class="swimlane-header">RESPONSÁVEL TÉCNICO OBRA</div>
+                <div class="swimlane-content">
+                    <div class="bpmn-element activity-critical">
+                        Recebe Planta<br>
+                        <small>(Assina recebimento)</small>
+                    </div>
+                    <span class="arrow">→</span>
+                    <div class="bpmn-element activity">
+                        Registra em<br>Planilha Controle
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ETAPA 4 -->
+        <div class="phase-title">ETAPA 4: COMUNICAÇÃO PRESTADORES</div>
+
+        <div class="bpmn-diagram">
+            <div class="swimlane">
+                <div class="swimlane-header">THAIZ (GERENTE)</div>
+                <div class="swimlane-content">
+                    <div class="bpmn-element activity-critical">
+                        Envia E-mail<br>TODOS Prestadores<br>
+                        <small>(Rev.XX + PDF anexo)</small>
+                    </div>
+                    <span class="arrow">→</span>
+                    <div class="bpmn-element activity">
+                        Aguarda Confirmação<br>
+                        <small>(Prazo: 48h)</small>
+                    </div>
+                    <span class="arrow">→</span>
+                    <div class="bpmn-element gateway">
+                        <div class="gateway-text">Confirmou?</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="swimlane">
+                <div class="swimlane-header">PRESTADORES</div>
+                <div class="swimlane-content">
+                    <div class="bpmn-element activity">
+                        Recebe E-mail<br>Nova Revisão
+                    </div>
+                    <span class="arrow">→</span>
+                    <div class="bpmn-element activity-critical">
+                        CONFIRMA<br>Recebimento<br>
+                        <small>(Responde e-mail)</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="critical-box">
+            <h4>🔴 REGRA CRÍTICA:</h4>
+            <p><strong>Se prestador NÃO confirmar em 48h:</strong></p>
+            <ul style="margin-left: 20px;">
+                <li>Thaiz LIGA cobrando confirmação</li>
+                <li>Registra ligação em planilha</li>
+                <li>Sem confirmação = NÃO pode executar serviço</li>
+            </ul>
+        </div>
+
+        <!-- ETAPA 5 -->
+        <div class="phase-title">ETAPA 5: ANÁLISE DE IMPACTOS (CRÍTICA!)</div>
+
+        <div class="alert alert-danger">
+            <strong>🛑 PARADA OBRIGATÓRIA:</strong> Esta etapa é o CORAÇÃO do processo. Aqui decidimos se vale a pena executar a mudança.
+        </div>
+
+        <div class="bpmn-diagram">
+            <div class="swimlane">
+                <div class="swimlane-header">RESPONSÁVEL TÉCNICO OBRA</div>
+                <div class="swimlane-content">
+                    <div class="bpmn-element activity-critical">
+                        PAUSA<br>Execução<br>
+                        <small>(OBRIGATÓRIO!)</small>
+                    </div>
+                    <span class="arrow">→</span>
+                    <div class="bpmn-element activity">
+                        Analisa Mudança<br>
+                        <small>(Técnica)</small>
+                    </div>
+                    <span class="arrow">→</span>
+                    <div class="bpmn-element gateway">
+                        <div class="gateway-text">Viável?</div>
+                    </div>
+                    <span class="arrow">→</span>
+                    <div class="bpmn-element activity-critical">
+                        Preenche FORM<br>ANÁLISE IMPACTO<br>
+                        <small>(Cronograma + Custo)</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="swimlane">
+                <div class="swimlane-header">THAIZ (GERENTE)</div>
+                <div class="swimlane-content">
+                    <div class="bpmn-element activity">
+                        Recebe Análise<br>Responsável
+                    </div>
+                    <span class="arrow">→</span>
+                    <div class="bpmn-element activity">
+                        Consolida Dados<br>
+                        <small>(Custo total + Margem)</small>
+                    </div>
+                    <span class="arrow">→</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="rules-box">
+            <h4>📋 FORM ANÁLISE IMPACTO - CAMPOS OBRIGATÓRIOS:</h4>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li><strong>Impacto Cronograma:</strong> +X dias (justificativa técnica)</li>
+                <li><strong>Custo Material:</strong> R$ X (detalhamento)</li>
+                <li><strong>Custo Mão Obra:</strong> R$ X (detalhamento)</li>
+                <li><strong>Custo TOTAL:</strong> R$ X</li>
+                <li><strong>Orçamento Obra Atual:</strong> R$ Y</li>
+                <li><strong>Margem ANTES mudança:</strong> Z%</li>
+                <li><strong>Margem APÓS mudança:</strong> W%</li>
+                <li><strong>Quem paga?</strong> CLIENTE / ARQUITETO / GAK</li>
+                <li><strong>Se GAK paga, vale a pena?</strong> SIM/NÃO (justificar)</li>
+            </ul>
+        </div>
+
+        <div class="timeline">
+            <strong>⏱️ Prazo Análise:</strong>
+            <div class="timeline-item">Urgente: 4h</div>
+            <div class="timeline-item">Normal: 24h</div>
+        </div>
+
+        <!-- ETAPA 6 -->
+        <div class="phase-title">ETAPA 6: APROVAÇÃO GUILHERME (SEMPRE!)</div>
+
+        <div class="alert alert-danger">
+            <strong>🛑 REGRA DE OURO:</strong> Guilherme SEMPRE aprova mudanças (diferente de revisões que têm alçada). Por quê? Porque MARGEM é estratégica!
+        </div>
+
+        <div class="bpmn-diagram">
+            <div class="swimlane">
+                <div class="swimlane-header">GUILHERME (CEO)</div>
+                <div class="swimlane-content">
+                    <div class="bpmn-element activity">
+                        Recebe Análise<br>Completa
+                    </div>
+                    <span class="arrow">→</span>
+                    <div class="bpmn-element activity-critical">
+                        Avalia Critérios<br>Decisão
+                    </div>
+                    <span class="arrow">→</span>
+                    <div class="bpmn-element gateway">
+                        <div class="gateway-text">Decisão?</div>
+                    </div>
+                    <span class="arrow">→</span>
+                    <div class="bpmn-element activity">
+                        Registra Decisão<br>
+                        <small>(Aprovar/Rejeitar/Negociar)</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="rules-box">
+            <h4>📋 CRITÉRIOS DECISÃO GUILHERME:</h4>
+            <div style="margin-top: 10px;">
+                <p><strong>✅ APROVAR se:</strong></p>
+                <ul style="margin-left: 20px;">
+                    <li>Cliente paga 100% custo</li>
+                    <li>GAK paga MAS margem mantém >15%</li>
+                    <li>Mudança crítica para obra funcionar</li>
+                </ul>
+                
+                <p style="margin-top: 10px;"><strong>⚠️ NEGOCIAR se:</strong></p>
+                <ul style="margin-left: 20px;">
+                    <li>Arquiteto errou projeto (arquiteto deve absorver)</li>
+                    <li>Custo muito alto (tentar dividir cliente)</li>
+                    <li>Margem fica entre 12-15% (zona cinza)</li>
+                </ul>
+                
+                <p style="margin-top: 10px;"><strong>❌ REJEITAR se:</strong></p>
+                <ul style="margin-left: 20px;">
+                    <li>GAK paga E margem cai <12%</li>
+                    <li>Mudança não essencial</li>
+                    <li>Cliente não aceita pagar</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="timeline">
+            <strong>⏱️ SLA Guilherme:</strong>
+            <div class="timeline-item">Urgente: 4h</div>
+            <div class="timeline-item">Normal: 24h</div>
+            <div class="timeline-item">Se não decidir no prazo: Thaiz decide (evita obra parar)</div>
+        </div>
+
+        <!-- ETAPA 7 -->
+        <div class="phase-title">ETAPA 7: FORMALIZAÇÃO CLIENTE/ARQUITETO</div>
+
+        <div class="bpmn-diagram">
+            <div class="swimlane">
+                <div class="swimlane-header">THAIZ (GERENTE)</div>
+                <div class="swimlane-content">
+                    <div class="bpmn-element gateway">
+                        <div class="gateway-text">Decisão?</div>
+                    </div>
+                    <span class="arrow">→</span>
+                    <div class="bpmn-element activity">
+                        Se APROVADO:<br>E-mail Cliente
+                    </div>
+                    <span class="arrow">→</span>
+                    <div class="bpmn-element activity">
+                        Se REJEITADO:<br>E-mail Cliente
+                    </div>
+                    <span class="arrow">→</span>
+                    <div class="bpmn-element activity-critical">
+                        Lança VIGHA<br>Campo: EXTRAS<br>
+                        <small>(Se aprovado)</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="swimlane">
+                <div class="swimlane-header">CLIENTE</div>
+                <div class="swimlane-content">
+                    <div class="bpmn-element activity">
+                        Recebe E-mail<br>Formalização
+                    </div>
+                    <span class="arrow">→</span>
+                    <div class="bpmn-element activity-critical">
+                        Aprova Formalmente<br>
+                        <small>(Responde e-mail)</small>
+                    </div>
+                    <span class="arrow">→</span>
+                    <div class="bpmn-element gateway">
+                        <div class="gateway-text">24h?</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="rules-box">
+            <h4>📧 TEMPLATES E-MAIL (6 tipos criados):</h4>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li><strong>E-mail 1:</strong> Cliente - Impacto Cronograma</li>
+                <li><strong>E-mail 2:</strong> Cliente - Impacto Custo (mudança cliente)</li>
+                <li><strong>E-mail 3:</strong> Arquiteto - Impacto Custo (erro projeto)</li>
+                <li><strong>E-mail 4:</strong> Prestadores - Nova Revisão</li>
+                <li><strong>E-mail 5:</strong> Cliente - Mudança Aprovada</li>
+                <li><strong>E-mail 6:</strong> Cliente - Mudança Rejeitada</li>
+            </ul>
+        </div>
+
+        <div class="critical-box">
+            <h4>🔴 REGRA PRAZO RESPOSTA CLIENTE:</h4>
+            <p>Cliente tem <strong>24h</strong> para responder aprovação formal.</p>
+            <p><strong>Se não responder em 24h:</strong> Mudança automaticamente NÃO aprovada (não executar).</p>
+            <p><strong>Comunicação complementar:</strong> WhatsApp avisando "Enviamos e-mail, por favor confirme".</p>
+        </div>
+
+        <!-- ETAPA 8 -->
+        <div class="phase-title">ETAPA 8: REGISTRO E CONTROLE</div>
+
+        <div class="bpmn-diagram">
+            <div class="swimlane">
+                <div class="swimlane-header">THAIZ (GERENTE)</div>
+                <div class="swimlane-content">
+                    <div class="bpmn-element activity-critical">
+                        Atualiza Planilha<br>ALTERAÇÕES-EXTRAS<br>
+                        <small>(Compartilhada Arquiteto)</small>
+                    </div>
+                    <span class="arrow">→</span>
+                    <div class="bpmn-element activity">
+                        Atualiza Cronograma<br>
+                        <small>(Se impactou prazo)</small>
+                    </div>
+                    <span class="arrow">→</span>
+                    <div class="bpmn-element activity">
+                        Atualiza Orçamento<br>
+                        <small>(Se impactou custo)</small>
+                    </div>
+                    <span class="arrow">→</span>
+                    <div class="bpmn-element activity">
+                        Arquiva Drive<br>
+                        <small>(E-mails + Forms)</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="rules-box">
+            <h4>📊 PLANILHA ALTERAÇÕES-EXTRAS - CAMPOS:</h4>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li>Data solicitação</li>
+                <li>Número revisão</li>
+                <li>Solicitante (Cliente/Arquiteto)</li>
+                <li>Descrição alteração</li>
+                <li>Impacto cronograma (+X dias)</li>
+                <li>Impacto custo (R$ X)</li>
+                <li>Quem paga (Cliente/Arquiteto/GAK)</li>
+                <li>Status aprovação</li>
+                <li>Data aprovação</li>
+                <li>Lançado VIGHA? SIM/NÃO</li>
+                <li>Observações</li>
+            </ul>
+        </div>
+
+        <!-- ETAPA 9 -->
+        <div class="phase-title">ETAPA 9: FISCALIZAÇÃO IMPLEMENTAÇÃO</div>
+
+        <div class="bpmn-diagram">
+            <div class="swimlane">
+                <div class="swimlane-header">RESPONSÁVEL TÉCNICO OBRA</div>
+                <div class="swimlane-content">
+                    <div class="bpmn-element activity">
+                        Acompanha<br>Implementação
+                    </div>
+                    <span class="arrow">→</span>
+                    <div class="bpmn-element activity">
+                        Verifica Prestadores<br>Seguindo Rev.XX
+                    </div>
+                    <span class="arrow">→</span>
+                    <div class="bpmn-element activity-critical">
+                        Registro Fotográfico<br>
+                        <small>(Antes/Durante/Depois)</small>
+                    </div>
+                    <span class="arrow">→</span>
+                    <div class="bpmn-element activity">
+                        Valida Resultado<br>Final
+                    </div>
+                    <span class="arrow">→</span>
+                    <div class="bpmn-element event-end">FIM</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="rules-box">
+            <h4>📸 REGISTRO FOTOGRÁFICO OBRIGATÓRIO:</h4>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li><strong>ANTES:</strong> Foto situação atual (antes implementar mudança)</li>
+                <li><strong>DURANTE:</strong> Fotos progresso execução</li>
+                <li><strong>DEPOIS:</strong> Foto resultado final</li>
+                <li><strong>Armazenamento:</strong> Drive → Obra X → Alterações → Fotos Rev.XX</li>
+            </ul>
+        </div>
+
+        <!-- RESUMO VISUAL -->
+        <div class="phase-title">📊 RESUMO VISUAL - 9 ETAPAS</div>
+
+        <div class="timeline" style="flex-direction: column; gap: 15px;">
+            <div class="timeline-item" style="width: 100%;">
+                <strong>ETAPA 0:</strong> Baseline - Projeto inicial formalizado (antes obra)
+            </div>
+            <div class="timeline-item" style="width: 100%;">
+                <strong>ETAPA 1:</strong> Recebimento alterações (e-mail obrigatório, projeto completo)
+            </div>
+            <div class="timeline-item" style="width: 100%;">
+                <strong>ETAPA 2:</strong> Validação projeto (Thaiz + Estagiário, planilha histórico)
+            </div>
+            <div class="timeline-item" style="width: 100%;">
+                <strong>ETAPA 3:</strong> Levar para obra (Responsável técnico assina)
+            </div>
+            <div class="timeline-item" style="width: 100%;">
+                <strong>ETAPA 4:</strong> Comunicação prestadores (e-mail + confirmação 48h)
+            </div>
+            <div class="timeline-item" style="width: 100%; background: #ffe6e6; border-color: #e74c3c;">
+                <strong>ETAPA 5:</strong> 🔴 ANÁLISE IMPACTOS (pausa obrigatória, form completo, margem calculada)
+            </div>
+            <div class="timeline-item" style="width: 100%; background: #ffe6e6; border-color: #e74c3c;">
+                <strong>ETAPA 6:</strong> 🔴 APROVAÇÃO GUILHERME (sempre, SLA 24h, critérios claros)
+            </div>
+            <div class="timeline-item" style="width: 100%;">
+                <strong>ETAPA 7:</strong> Formalização cliente/arquiteto (e-mails, VIGHA extras)
+            </div>
+            <div class="timeline-item" style="width: 100%;">
+                <strong>ETAPA 8:</strong> Registro controle (planilhas, Drive, atualiza documentos)
+            </div>
+            <div class="timeline-item" style="width: 100%;">
+                <strong>ETAPA 9:</strong> Fiscalização implementação (acompanhamento, fotos, validação)
+            </div>
+        </div>
+
+        <!-- LEGENDA -->
+        <div class="legend">
+            <h3>📖 Legenda BPMN</h3>
+            <div class="legend-item">
+                <div class="legend-icon event-start">Início</div>
+                <span>Evento de Início (círculo verde)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-icon event-end">Fim</div>
+                <span>Evento de Término (círculo verde preenchido)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-icon activity" style="border: 2px solid #3498db;">Atividade</div>
+                <span>Atividade/Tarefa Normal (retângulo azul)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-icon activity-critical" style="border: 3px solid #e74c3c; background: #ffe6e6;">Crítica</div>
+                <span>Atividade CRÍTICA (retângulo vermelho)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-icon gateway" style="width: 50px; height: 50px;"><div class="gateway-text">?</div></div>
+                <span>Decisão/Gateway (losango amarelo)</span>
+            </div>
+            <div class="legend-item">
+                <span class="arrow">→</span>
+                <span>Fluxo de Sequência (seta)</span>
+            </div>
+        </div>
+
+        <!-- BENEFÍCIOS -->
+        <div class="alert alert-success">
+            <h4 style="margin-bottom: 10px;">✅ BENEFÍCIOS DESTE PROCESSO:</h4>
+            <ul style="margin-left: 20px;">
+                <li><strong>Protege margem:</strong> Análise impacto ANTES executar</li>
+                <li><strong>Evita prejuízos:</strong> Cliente paga por mudanças que solicita</li>
+                <li><strong>Rastreabilidade:</strong> Histórico completo todas alterações</li>
+                <li><strong>Comunicação clara:</strong> Todos stakeholders informados formalmente</li>
+                <li><strong>Evita retrabalho:</strong> Prestadores trabalham versão correta</li>
+                <li><strong>Decisões documentadas:</strong> E-mails arquivados como prova</li>
+                <li><strong>Controle Guilherme:</strong> Aprovação centralizada decisões estratégicas</li>
+                <li><strong>Accountability:</strong> Cada um sabe exatamente sua responsabilidade</li>
+            </ul>
+        </div>
+
+        <!-- IMPLEMENTAÇÃO -->
+        <div class="alert alert-info">
+            <h4 style="margin-bottom: 10px;">🚀 IMPLEMENTAÇÃO JANEIRO 2026:</h4>
+            <p><strong>Aplicar em:</strong> TODAS obras NOVAS a partir Janeiro 2026</p>
+            <p><strong>Materiais criados:</strong></p>
+            <ul style="margin-left: 20px;">
+                <li>✅ Form Análise Impacto</li>
+                <li>✅ Planilha Histórico Revisões</li>
+                <li>✅ Planilha Alterações-Extras</li>
+                <li>✅ 6 Templates E-mail</li>
+                <li>✅ Checklist Validação</li>
+            </ul>
+            <p style="margin-top: 10px;"><strong>Treinamento:</strong> Workshop 2h primeira semana Janeiro</p>
+            <p><strong>Piloto:</strong> 1 obra teste para ajustar processo</p>
+        </div>
+
+        <div style="text-align: center; margin-top: 30px; padding: 20px; background: #f8f9fa; border-radius: 8px;">
+            <p style="color: #7f8c8d; font-size: 0.9em;">
+                <strong>GAK Construtora</strong> | Processo Gestão de Mudanças v1.0<br>
+                Validado em Reunião | Implementação: Janeiro 2026<br>
+                Consultor: Raul | Metodologia: CORE
+            </p>
+        </div>
+    </div>
+</body>
+</html>

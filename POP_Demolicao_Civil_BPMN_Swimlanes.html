@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BPMN - POP Demolição + Civil GAK</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f2f5;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .header h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .header .subtitle {
+            color: #7f8c8d;
+            font-size: 1.1em;
+        }
+        
+        .swimlane-container {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .phase-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 30px;
+            font-size: 1.3em;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .swimlane {
+            display: grid;
+            grid-template-columns: 150px 1fr;
+            border-bottom: 2px solid #e0e0e0;
+            min-height: 100px;
+        }
+        
+        .swimlane:last-child {
+            border-bottom: none;
+        }
+        
+        .swimlane-label {
+            background: #34495e;
+            color: white;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.1em;
+            text-align: center;
+            border-right: 3px solid #2c3e50;
+        }
+        
+        .swimlane-content {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            overflow-x: auto;
+            background: #fafafa;
+        }
+        
+        .bpmn-element {
+            flex-shrink: 0;
+            text-align: center;
+            position: relative;
+        }
+        
+        .event {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 3px solid #2c3e50;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7em;
+            font-weight: bold;
+            padding: 5px;
+        }
+        
+        .event.start {
+            border-color: #27ae60;
+            color: #27ae60;
+        }
+        
+        .event.end {
+            border: 5px double #e74c3c;
+            color: #e74c3c;
+        }
+        
+        .event.marco {
+            border: 4px solid #e74c3c;
+            background: #ffe6e6;
+            color: #e74c3c;
+            width: 70px;
+            height: 70px;
+        }
+        
+        .task {
+            min-width: 140px;
+            max-width: 200px;
+            padding: 15px;
+            border: 2px solid #2c3e50;
+            border-radius: 8px;
+            background: #f39c12;
+            border-color: #d68910;
+            font-size: 0.85em;
+            line-height: 1.3;
+            color: white;
+        }
+        
+        .task.critical {
+            background: #e74c3c;
+            border-color: #c0392b;
+            font-weight: bold;
+        }
+        
+        .arrow {
+            width: 40px;
+            height: 2px;
+            background: #2c3e50;
+            position: relative;
+            flex-shrink: 0;
+        }
+        
+        .arrow::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: -4px;
+            width: 0;
+            height: 0;
+            border-left: 10px solid #2c3e50;
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+        }
+        
+        .label {
+            position: absolute;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap;
+            font-size: 0.75em;
+            color: #7f8c8d;
+            background: #fafafa;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        
+        .info-box {
+            background: #e8f4f8;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin: 20px;
+            border-radius: 5px;
+        }
+        
+        .checklist {
+            background: white;
+            padding: 20px;
+            margin: 20px;
+            border-radius: 10px;
+            border: 2px solid #e0e0e0;
+        }
+        
+        .checklist h3 {
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+        
+        .checklist-item {
+            display: flex;
+            gap: 15px;
+            padding: 10px;
+            border-bottom: 1px solid #e0e0e0;
+            align-items: center;
+        }
+        
+        .checklist-item:last-child {
+            border-bottom: none;
+        }
+        
+        .item-number {
+            font-weight: bold;
+            color: #667eea;
+            min-width: 30px;
+        }
+        
+        .item-critical {
+            background: #ffe6e6;
+            border-left: 4px solid #e74c3c;
+        }
+        
+        .marco-badge {
+            background: #e74c3c;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.7em;
+            font-weight: bold;
+        }
+        
+        @media print {
+            body {
+                background: white;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🏗️ POP DEMOLIÇÃO + CIVIL - BPMN 2.0</h1>
+        <p class="subtitle">GAK Construtora | 14 Etapas Sequenciais com Marco 1</p>
+    </div>
+
+    <!-- FLUXOGRAMA BPMN -->
+    <div class="swimlane-container">
+        <div class="phase-header">
+            🔨 ETAPAS PRÉ-MARCO 1 (Etapas 1-5)
+        </div>
+
+        <!-- SWIMLANE: THAIZ + PRESTADOR -->
+        <div class="swimlane">
+            <div class="swimlane-label">
+                👩‍💼👷<br>THAIZ +<br>PRESTADOR
+            </div>
+            <div class="swimlane-content">
+                <div class="bpmn-element">
+                    <div class="event start">Demolição Autorizada</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task">1. Executar Iluminação Provisória</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task">2. Marcação Pontos<br>(Elétrica/Hidráulica/Split/Nichos)</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task">3. Inspeção Paredes para Liberação</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task">4. Averiguar Projeto Estrutural</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task">5. Verificar Projeto<br>+ Demarcar Tarefas</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task">6. Demarcar Vãos<br>e Canaletas</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="swimlane-container">
+        <div class="phase-header" style="background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);">
+            ⚠️ MARCO 1 - PONTO CRÍTICO (Etapa 7)
+        </div>
+
+        <!-- SWIMLANE: THAIZ -->
+        <div class="swimlane">
+            <div class="swimlane-label">
+                👩‍💼<br>THAIZ
+            </div>
+            <div class="swimlane-content">
+                <div class="bpmn-element">
+                    <div class="task">7. Remoção Metais, Louças, Portas<br>(ETIQUETAR + EMBALAR)</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="event marco">MARCO 1</div>
+                    <div class="label" style="width: 150px;">CONFERIR CAIXINHAS</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task critical">8. CONFERIR CAIXINHAS ELÉTRICAS<br>ANTES DO REBOCO</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="swimlane-container">
+        <div class="phase-header">
+            🏗️ ETAPAS PÓS-MARCO 1 (Etapas 9-14)
+        </div>
+
+        <!-- SWIMLANE: THAIZ + CARLOS + PRESTADOR -->
+        <div class="swimlane">
+            <div class="swimlane-label">
+                👥<br>EQUIPE<br>COMPLETA
+            </div>
+            <div class="swimlane-content">
+                <div class="bpmn-element">
+                    <div class="task">9. Verificar Ventokit<br>(Fazer Abertura)</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task">10. Verificar Mureta<br>e Nicho Banhos</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task">11. Verificar Paredes<br>Revestimento+Pintura<br>(Prever Rebaixo)</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task">12. Pinar Muretas<br>com Ferragem</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task">13. Conferir Vãos<br>In Loco</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task">14. Compatibilizar Nível Piso<br>(Banheiro/Cozinha/Entrada)</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SWIMLANE: THAIZ (Validações Finais) -->
+        <div class="swimlane">
+            <div class="swimlane-label">
+                👩‍💼<br>THAIZ
+            </div>
+            <div class="swimlane-content">
+                <div style="width: 1000px;"></div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task">15. Verificar Prumo Paredes<br>e Esquadro Peças</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task">16. Inspeções Passagem<br>Linhas Split</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="event end">Demolição + Civil<br>COMPLETO</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CHECKLIST 14 ETAPAS -->
+    <div class="checklist">
+        <h3>📋 CHECKLIST COMPLETO - 14 ETAPAS DEMOLIÇÃO + CIVIL</h3>
+        
+        <div class="checklist-item">
+            <div class="item-number">1.</div>
+            <div>Execução da iluminação provisória</div>
+        </div>
+        
+        <div class="checklist-item">
+            <div class="item-number">2.</div>
+            <div>Marcação de pontos elétricos/hidráulicos/split e nichos</div>
+        </div>
+        
+        <div class="checklist-item">
+            <div class="item-number">3.</div>
+            <div>Inspeção nas paredes para liberação de execução de pontos</div>
+        </div>
+        
+        <div class="checklist-item">
+            <div class="item-number">4.</div>
+            <div>Averiguar necessidade de projeto estrutural</div>
+        </div>
+        
+        <div class="checklist-item">
+            <div class="item-number">5.</div>
+            <div>Fazer verificação do projeto em obra e demarcar tarefas (demarcar paredes e acabamentos)</div>
+        </div>
+        
+        <div class="checklist-item">
+            <div class="item-number">6.</div>
+            <div>Demarcar vãos e canaletas a serem abertas</div>
+        </div>
+        
+        <div class="checklist-item">
+            <div class="item-number">7.</div>
+            <div>Remoção de todos os metais, louças, portas, acabamentos elétricos e luminárias<br><strong>(ETIQUETAR COM AMBIENTE E EMBALAR COM PLÁSTICO BOLHA)</strong></div>
+        </div>
+        
+        <div class="checklist-item item-critical">
+            <div class="item-number">8.</div>
+            <div><strong>MARCO 1:</strong> CONFERIR CAIXINHAS ELÉTRICAS ANTES DO REBOCO <span class="marco-badge">CRÍTICO</span></div>
+        </div>
+        
+        <div class="checklist-item">
+            <div class="item-number">9.</div>
+            <div>Verificar a existência de ventokit, fazer a abertura</div>
+        </div>
+        
+        <div class="checklist-item">
+            <div class="item-number">10.</div>
+            <div>Verificação de mureta e tamanho de nicho nos banhos</div>
+        </div>
+        
+        <div class="checklist-item">
+            <div class="item-number">11.</div>
+            <div>Verificar paredes com revestimento + pintura: prever rebaixo</div>
+        </div>
+        
+        <div class="checklist-item">
+            <div class="item-number">12.</div>
+            <div>Pinar muretas com ferragem</div>
+        </div>
+        
+        <div class="checklist-item">
+            <div class="item-number">13.</div>
+            <div>Conferir vãos in loco</div>
+        </div>
+        
+        <div class="checklist-item">
+            <div class="item-number">14.</div>
+            <div>Compatibilização nível de piso no banheiro, cozinha e entrada</div>
+        </div>
+        
+        <div class="checklist-item">
+            <div class="item-number">15.</div>
+            <div>Verificar prumo paredes e esquadro peças</div>
+        </div>
+        
+        <div class="checklist-item">
+            <div class="item-number">16.</div>
+            <div>Inspeções para passagem de linhas de split</div>
+        </div>
+    </div>
+
+    <div class="info-box" style="background: #ffe6e6; border-left-color: #e74c3c;">
+        <h3>🔴 MARCO 1 - POR QUE É CRÍTICO?</h3>
+        <p><strong>Se NÃO conferir caixinhas elétricas antes do reboco:</strong></p>
+        <ul style="margin-left: 20px; margin-top: 10px;">
+            <li>✗ Caixinhas enterradas no reboco</li>
+            <li>✗ Impossível instalar interruptores/tomadas depois</li>
+            <li>✗ Precisa quebrar reboco (retrabalho)</li>
+            <li>✗ Atraso obra + custo adicional</li>
+        </ul>
+        <p style="margin-top: 10px;"><strong>✅ OBRIGATÓRIO conferir ANTES de liberar reboco!</strong></p>
+    </div>
+
+    <div class="info-box">
+        <h3>📊 Resumo Swimlanes</h3>
+        <p><strong>👩‍💼👷 THAIZ + PRESTADOR:</strong> Etapas 1-6 (preparação demolição)</p>
+        <p><strong>👩‍💼 THAIZ:</strong> Etapa 7-8 (remoção + MARCO 1 crítico)</p>
+        <p><strong>👥 EQUIPE COMPLETA:</strong> Etapas 9-14 (verificações pós-demolição)</p>
+        <p><strong>👩‍💼 THAIZ:</strong> Etapas 15-16 (validações finais)</p>
+    </div>
+
+    <div style="margin-top: 20px; padding: 15px; background: white; border-radius: 10px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+        <button onclick="window.print()" style="padding: 12px 30px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 8px; font-size: 1.1em; font-weight: bold; cursor: pointer;">
+            🖨️ Imprimir Fluxograma
+        </button>
+    </div>
+</body>
+</html>

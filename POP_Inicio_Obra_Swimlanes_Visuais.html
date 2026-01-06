@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BPMN Swimlanes - POP Início de Obra GAK</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f2f5;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .header h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .header .subtitle {
+            color: #7f8c8d;
+            font-size: 1.1em;
+        }
+        
+        .legend {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .legend h3 {
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+        
+        .legend-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+        
+        .legend-box {
+            width: 40px;
+            height: 40px;
+            border: 2px solid #2c3e50;
+            border-radius: 5px;
+            flex-shrink: 0;
+        }
+        
+        .swimlane-container {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .phase-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 30px;
+            font-size: 1.3em;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .swimlane {
+            display: grid;
+            grid-template-columns: 150px 1fr;
+            border-bottom: 2px solid #e0e0e0;
+            min-height: 120px;
+        }
+        
+        .swimlane:last-child {
+            border-bottom: none;
+        }
+        
+        .swimlane-label {
+            background: #34495e;
+            color: white;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.1em;
+            text-align: center;
+            border-right: 3px solid #2c3e50;
+        }
+        
+        .swimlane-content {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            overflow-x: auto;
+            background: #fafafa;
+        }
+        
+        /* Elementos BPMN */
+        .bpmn-element {
+            flex-shrink: 0;
+            text-align: center;
+            position: relative;
+        }
+        
+        .event {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 3px solid #2c3e50;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7em;
+            font-weight: bold;
+            padding: 5px;
+        }
+        
+        .event.start {
+            border-color: #27ae60;
+            color: #27ae60;
+        }
+        
+        .event.end {
+            border: 5px double #e74c3c;
+            color: #e74c3c;
+        }
+        
+        .event.intermediate {
+            border: 3px double #f39c12;
+            color: #f39c12;
+        }
+        
+        .task {
+            min-width: 140px;
+            max-width: 180px;
+            padding: 15px;
+            border: 2px solid #2c3e50;
+            border-radius: 8px;
+            background: white;
+            font-size: 0.85em;
+            line-height: 1.3;
+        }
+        
+        .task.admin {
+            background: #FFD700;
+            border-color: #FFA500;
+        }
+        
+        .task.loco {
+            background: #90EE90;
+            border-color: #228B22;
+        }
+        
+        .gateway {
+            width: 60px;
+            height: 60px;
+            background: #FFE4B5;
+            border: 3px solid #FF8C00;
+            transform: rotate(45deg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .gateway-label {
+            transform: rotate(-45deg);
+            font-size: 0.7em;
+            font-weight: bold;
+            text-align: center;
+            width: 80px;
+        }
+        
+        .gateway.parallel::before {
+            content: '+';
+            font-size: 2em;
+            font-weight: bold;
+            transform: rotate(-45deg);
+        }
+        
+        .gateway.exclusive::before {
+            content: '×';
+            font-size: 2em;
+            font-weight: bold;
+            transform: rotate(-45deg);
+        }
+        
+        .arrow {
+            width: 40px;
+            height: 2px;
+            background: #2c3e50;
+            position: relative;
+            flex-shrink: 0;
+        }
+        
+        .arrow::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: -4px;
+            width: 0;
+            height: 0;
+            border-left: 10px solid #2c3e50;
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+        }
+        
+        .arrow.conditional {
+            background: #e74c3c;
+        }
+        
+        .arrow.conditional::after {
+            border-left-color: #e74c3c;
+        }
+        
+        .document {
+            width: 50px;
+            height: 60px;
+            background: white;
+            border: 2px solid #3498db;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7em;
+        }
+        
+        .document::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 10px;
+            background: white;
+            border: 2px solid #3498db;
+            border-top: none;
+            border-radius: 0 0 50% 50%;
+        }
+        
+        .timer {
+            width: 50px;
+            height: 50px;
+            border: 3px solid #9b59b6;
+            border-radius: 50%;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7em;
+            position: relative;
+        }
+        
+        .timer::before {
+            content: '⏰';
+            font-size: 1.5em;
+        }
+        
+        .label {
+            position: absolute;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap;
+            font-size: 0.75em;
+            color: #7f8c8d;
+            background: #fafafa;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        
+        .vertical-arrow {
+            width: 2px;
+            height: 80px;
+            background: #2c3e50;
+            position: relative;
+            margin: 0 auto;
+        }
+        
+        .vertical-arrow::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: -4px;
+            width: 0;
+            height: 0;
+            border-top: 10px solid #2c3e50;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+        }
+        
+        .info-box {
+            background: #e8f4f8;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .info-box strong {
+            color: #2c3e50;
+        }
+        
+        @media print {
+            body {
+                background: white;
+            }
+            .header, .legend, .swimlane-container {
+                box-shadow: none;
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🏗️ POP INÍCIO DE OBRA - BPMN 2.0 COM SWIMLANES</h1>
+        <p class="subtitle">GAK Construtora | Fluxograma com Responsabilidades Claras</p>
+    </div>
+
+    <div class="legend">
+        <h3>📋 Legenda</h3>
+        <div class="legend-grid">
+            <div class="legend-item">
+                <div class="legend-box" style="border-radius: 50%; border-color: #27ae60;"></div>
+                <span><strong>Círculo Verde:</strong> Início</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-box" style="border-radius: 50%; border: 4px double #e74c3c;"></div>
+                <span><strong>Círculo Duplo:</strong> Fim</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-box" style="background: #FFD700; border-radius: 8px;"></div>
+                <span><strong>Retângulo Amarelo:</strong> Tarefa Admin</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-box" style="background: #90EE90; border-radius: 8px;"></div>
+                <span><strong>Retângulo Verde:</strong> Tarefa In Loco</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-box" style="background: #FFE4B5; transform: rotate(45deg);"></div>
+                <span><strong>Losango:</strong> Decisão/Gateway</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-box" style="border-radius: 50%; border-color: #9b59b6;"></div>
+                <span><strong>Relógio:</strong> Prazo (2 dias)</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- FASE 1: ADMINISTRATIVA -->
+    <div class="swimlane-container" style="margin-bottom: 30px;">
+        <div class="phase-header">
+            📋 FASE 1: ADMINISTRATIVA (AMARELO) - 2-3 DIAS
+        </div>
+
+        <!-- SWIMLANE: THAIZ -->
+        <div class="swimlane">
+            <div class="swimlane-label">
+                👩‍💼<br>THAIZ<br><small>(Gerente Projetos)</small>
+            </div>
+            <div class="swimlane-content">
+                <div class="bpmn-element">
+                    <div class="event start">Contrato Assinado</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="gateway parallel">
+                        <div class="gateway-label">Gateway Paralelo</div>
+                    </div>
+                    <div class="label">Abertura 5 Pilares</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task admin">Pedir Plotagem de Projeto</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task admin">Verificar Versão Atualizada</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task admin">Conferir Carimbo e Data</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="info-box" style="width: 200px;">
+                    <strong>PILAR 1:</strong> Plotagem Projeto
+                </div>
+            </div>
+        </div>
+
+        <!-- SWIMLANE: THAIZ (Pilar 2 - Síndico) -->
+        <div class="swimlane">
+            <div class="swimlane-label">
+                👩‍💼<br>THAIZ
+            </div>
+            <div class="swimlane-content">
+                <div style="width: 100px;"></div> <!-- Spacer para alinhar -->
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="gateway exclusive">
+                        <div class="gateway-label">Tem Síndico?</div>
+                    </div>
+                    <div class="label">Decisão</div>
+                </div>
+                
+                <div class="arrow conditional"></div>
+                <div style="font-size: 0.8em; color: #e74c3c; font-weight: bold;">SIM ↓</div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task admin">Falar com Síndico</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task admin">Salvar Contato e E-mail</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task admin">Horários de Trabalho</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task admin">Lista Prestadores</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task admin">Local Caçamba</div>
+                </div>
+                
+                <div class="info-box" style="width: 200px; margin-left: 20px;">
+                    <strong>PILAR 2:</strong> Síndico (se houver)<br>
+                    <small>Se NÃO: pula este pilar</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- SWIMLANE: THAIZ (Pilar 3 - Importante) -->
+        <div class="swimlane">
+            <div class="swimlane-label">
+                👩‍💼<br>THAIZ
+            </div>
+            <div class="swimlane-content">
+                <div style="width: 100px;"></div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task admin">Fazer 3 Cópias Chave/Tag</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task admin">Verificar Ligação de Luz</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task admin">Alinhar Início com Cliente</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="timer">
+                        <div class="label">2 dias antes</div>
+                    </div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task admin">Pedido de Materiais</div>
+                </div>
+                
+                <div class="info-box" style="width: 200px; margin-left: 20px;">
+                    <strong>PILAR 3:</strong> Importante<br>
+                    <small>Chaves, luz, cliente, materiais</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- SWIMLANE: CLIENTE -->
+        <div class="swimlane">
+            <div class="swimlane-label">
+                🏠<br>CLIENTE
+            </div>
+            <div class="swimlane-content">
+                <div style="width: 500px;"></div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task admin">Aprovar Alinhamento Início</div>
+                </div>
+                
+                <div class="info-box" style="width: 200px; margin-left: 20px;">
+                    <strong>Interação:</strong> Cliente confirma data início
+                </div>
+            </div>
+        </div>
+
+        <!-- SWIMLANE: THAIZ (Pilar 4 - Prestadores) -->
+        <div class="swimlane">
+            <div class="swimlane-label">
+                👩‍💼<br>THAIZ
+            </div>
+            <div class="swimlane-content">
+                <div style="width: 100px;"></div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task admin">Marcar Prestadores Conforme Cronograma</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task admin">Solicitar Orçamentos Atualizados</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task admin">Obter Escopos Assinados</div>
+                </div>
+                
+                <div class="info-box" style="width: 200px; margin-left: 20px;">
+                    <strong>PILAR 4:</strong> Prestadores<br>
+                    <small>Agendamento + escopos</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- SWIMLANE: PRESTADORES -->
+        <div class="swimlane">
+            <div class="swimlane-label">
+                👷<br>PRESTADORES
+            </div>
+            <div class="swimlane-content">
+                <div style="width: 350px;"></div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task admin">Fornecer Orçamentos</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task admin">Assinar Escopos</div>
+                </div>
+                
+                <div class="info-box" style="width: 200px; margin-left: 20px;">
+                    <strong>Interação:</strong> Prestadores respondem
+                </div>
+            </div>
+        </div>
+
+        <!-- SWIMLANE: THAIZ (Pilar 5 - RRT) -->
+        <div class="swimlane">
+            <div class="swimlane-label">
+                👩‍💼<br>THAIZ
+            </div>
+            <div class="swimlane-content">
+                <div style="width: 100px;"></div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="timer">
+                        <div class="label">2 dias antes</div>
+                    </div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task admin">Solicitar RRT para Guilherme</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task admin">Montar Pasta Cliente (Drive + Física)</div>
+                </div>
+                
+                <div class="info-box" style="width: 200px; margin-left: 20px;">
+                    <strong>PILAR 5:</strong> RRT e Pasta<br>
+                    <small>Documentação completa</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- SWIMLANE: GUILHERME -->
+        <div class="swimlane">
+            <div class="swimlane-label">
+                👨‍💼<br>GUILHERME<br><small>(Sócio)</small>
+            </div>
+            <div class="swimlane-content">
+                <div style="width: 250px;"></div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task admin">Fornecer RRT</div>
+                </div>
+                
+                <div class="info-box" style="width: 200px; margin-left: 20px;">
+                    <strong>Interação:</strong> Guilherme entrega RRT
+                </div>
+            </div>
+        </div>
+
+        <!-- FECHAMENTO FASE ADMIN -->
+        <div class="swimlane">
+            <div class="swimlane-label">
+                👩‍💼<br>THAIZ
+            </div>
+            <div class="swimlane-content">
+                <div class="bpmn-element">
+                    <div class="gateway parallel">
+                        <div class="gateway-label">Gateway Paralelo</div>
+                    </div>
+                    <div class="label">Fechamento 5 Pilares</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="event intermediate">Fase Admin Completa</div>
+                </div>
+                
+                <div class="info-box" style="width: 300px; margin-left: 20px;">
+                    <strong>✅ FASE ADMINISTRATIVA CONCLUÍDA</strong><br>
+                    Todos os 5 pilares devem estar completos antes de avançar
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FASE 2: IN LOCO -->
+    <div class="swimlane-container">
+        <div class="phase-header">
+            🏗️ FASE 2: IN LOCO (VERDE) - 1-2 DIAS
+        </div>
+
+        <!-- SWIMLANE: THAIZ (Início In Loco) -->
+        <div class="swimlane">
+            <div class="swimlane-label">
+                👩‍💼<br>THAIZ
+            </div>
+            <div class="swimlane-content">
+                <div class="bpmn-element">
+                    <div class="event intermediate">Fase Admin Completa</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="gateway parallel">
+                        <div class="gateway-label">Gateway Paralelo</div>
+                    </div>
+                    <div class="label">Abertura 5 Pilares</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task loco">Recebimento de Materiais</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task loco">Conferir Quantidade, Cores, Marca</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="gateway exclusive">
+                        <div class="gateway-label">Material OK?</div>
+                    </div>
+                    <div class="label">Conforme?</div>
+                </div>
+                
+                <div class="info-box" style="width: 250px; margin-left: 20px;">
+                    <strong>PILAR 1:</strong> Recebimento Materiais<br>
+                    <small>Se NÃO conforme → tratar com Guilherme</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- SWIMLANE: GUILHERME (Divergência) -->
+        <div class="swimlane">
+            <div class="swimlane-label">
+                👨‍💼<br>GUILHERME
+            </div>
+            <div class="swimlane-content">
+                <div style="width: 640px;"></div>
+                <div class="arrow conditional"></div>
+                <div style="font-size: 0.8em; color: #e74c3c; font-weight: bold;">NÃO ↓</div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task loco">Aprovar Divergência Material</div>
+                </div>
+                
+                <div class="info-box" style="width: 200px; margin-left: 20px;">
+                    <strong>Interação:</strong> Guilherme decide sobre divergências
+                </div>
+            </div>
+        </div>
+
+        <!-- SWIMLANE: THAIZ (Pilar 2 - In Loco) -->
+        <div class="swimlane">
+            <div class="swimlane-label">
+                👩‍💼<br>THAIZ
+            </div>
+            <div class="swimlane-content">
+                <div style="width: 100px;"></div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task loco">Verificar Móveis Descartados com Cliente</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task loco">Colocar Placa GAK</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task loco">Forração e Proteção</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task loco">Levantamento Fotográfico</div>
+                </div>
+                
+                <div class="info-box" style="width: 200px; margin-left: 20px;">
+                    <strong>PILAR 2:</strong> Preparação Local<br>
+                    <small>Proteções + fotos antes</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- SWIMLANE: CLIENTE (Móveis) -->
+        <div class="swimlane">
+            <div class="swimlane-label">
+                🏠<br>CLIENTE
+            </div>
+            <div class="swimlane-content">
+                <div style="width: 150px;"></div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task loco">Decidir Sobre Móveis</div>
+                </div>
+                
+                <div class="info-box" style="width: 200px; margin-left: 20px;">
+                    <strong>Interação:</strong> Cliente define descarte/doação
+                </div>
+            </div>
+        </div>
+
+        <!-- SWIMLANE: THAIZ (Pilar 3 - Kit Limpeza) -->
+        <div class="swimlane">
+            <div class="swimlane-label">
+                👩‍💼<br>THAIZ
+            </div>
+            <div class="swimlane-content">
+                <div style="width: 100px;"></div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task loco">Separar Kit Limpeza</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task loco">Conferir: Pá, Vassoura, Balde, etc.</div>
+                </div>
+                
+                <div class="info-box" style="width: 200px; margin-left: 20px;">
+                    <strong>PILAR 3:</strong> Kit Limpeza<br>
+                    <small>7 itens essenciais</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- SWIMLANE: THAIZ (Pilar 4 - Material GAK) -->
+        <div class="swimlane">
+            <div class="swimlane-label">
+                👩‍💼<br>THAIZ
+            </div>
+            <div class="swimlane-content">
+                <div style="width: 100px;"></div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task loco">Preparar Caixa Material GAK</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task loco">Conferir: Soquetes, Plugs, Fita, etc.</div>
+                </div>
+                
+                <div class="info-box" style="width: 200px; margin-left: 20px;">
+                    <strong>PILAR 4:</strong> Material GAK<br>
+                    <small>Caixa padrão obra</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- SWIMLANE: THAIZ (Pilar 5 - Hidráulica) -->
+        <div class="swimlane">
+            <div class="swimlane-label">
+                👩‍💼<br>THAIZ
+            </div>
+            <div class="swimlane-content">
+                <div style="width: 100px;"></div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task loco">Verificação Hidráulica</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task loco">Identificar Marca/Modelo</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="gateway exclusive">
+                        <div class="gateway-label">Duo?</div>
+                    </div>
+                    <div class="label">Tipo Sistema</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task loco">Registrar Sistema</div>
+                </div>
+                
+                <div class="info-box" style="width: 200px; margin-left: 20px;">
+                    <strong>PILAR 5:</strong> Hidráulica<br>
+                    <small>Duo ou Simples?</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- FECHAMENTO FASE IN LOCO -->
+        <div class="swimlane">
+            <div class="swimlane-label">
+                👩‍💼<br>THAIZ
+            </div>
+            <div class="swimlane-content">
+                <div class="bpmn-element">
+                    <div class="gateway parallel">
+                        <div class="gateway-label">Gateway Paralelo</div>
+                    </div>
+                    <div class="label">Fechamento 5 Pilares</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="event end">POP COMPLETO</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div style="font-size: 1.5em; font-weight: bold; color: #27ae60; padding: 20px; background: #d4edda; border-radius: 10px;">
+                    ✅ OBRA PODE INICIAR!
+                </div>
+                
+                <div class="info-box" style="width: 300px; margin-left: 20px;">
+                    <strong>✅ FASE IN LOCO CONCLUÍDA</strong><br>
+                    Todos os 5 pilares devem estar completos.<br>
+                    Obra pronta para executar!
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div style="margin-top: 30px; padding: 20px; background: white; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+        <h2 style="margin-bottom: 15px; color: #2c3e50;">📊 Resumo das Swimlanes</h2>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;">
+            <div style="padding: 15px; background: #f8f9fa; border-left: 4px solid #34495e; border-radius: 5px;">
+                <strong>👩‍💼 THAIZ (80%)</strong><br>
+                <small>• 35+ atividades<br>• Coordenação geral<br>• Interface todos atores</small>
+            </div>
+            
+            <div style="padding: 15px; background: #f8f9fa; border-left: 4px solid #34495e; border-radius: 5px;">
+                <strong>👨‍💼 GUILHERME (10%)</strong><br>
+                <small>• Fornecer RRT<br>• Aprovar divergências<br>• Decisões críticas</small>
+            </div>
+            
+            <div style="padding: 15px; background: #f8f9fa; border-left: 4px solid #34495e; border-radius: 5px;">
+                <strong>👷 PRESTADORES (5%)</strong><br>
+                <small>• Orçamentos<br>• Escopos assinados<br>• Disponibilidade</small>
+            </div>
+            
+            <div style="padding: 15px; background: #f8f9fa; border-left: 4px solid #34495e; border-radius: 5px;">
+                <strong>🏠 CLIENTE (3%)</strong><br>
+                <small>• Alinhamento início<br>• Móveis descartados<br>• Aprovações</small>
+            </div>
+            
+            <div style="padding: 15px; background: #f8f9fa; border-left: 4px solid #34495e; border-radius: 5px;">
+                <strong>🏢 SÍNDICO (2%)</strong><br>
+                <small>• Informações condomínio<br>• Horários permitidos<br>• Logística caçamba</small>
+            </div>
+        </div>
+    </div>
+
+    <div style="margin-top: 20px; padding: 20px; background: #fff3cd; border-left: 4px solid #ffc107; border-radius: 5px;">
+        <strong>💡 INSIGHT:</strong> A Thaiz realiza 80% das atividades, atuando como hub central do processo. 
+        Os outros atores (Guilherme, Prestadores, Cliente, Síndico) têm papéis pontuais mas críticos.
+        Esta concentração explica a sobrecarga atual e justifica a contratação de assistente!
+    </div>
+
+    <div style="margin-top: 20px; padding: 15px; background: white; border-radius: 10px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+        <button onclick="window.print()" style="padding: 12px 30px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 8px; font-size: 1.1em; font-weight: bold; cursor: pointer; margin: 5px;">
+            🖨️ Imprimir Fluxograma
+        </button>
+        <p style="margin-top: 10px; color: #7f8c8d; font-size: 0.9em;">
+            💡 Dica: Configure impressora para "Paisagem" (Landscape) e papel A3 para melhor visualização
+        </p>
+    </div>
+</body>
+</html>

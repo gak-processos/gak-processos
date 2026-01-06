@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BPMN - Processo Orçamentação GAK</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f2f5;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .header h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .header .subtitle {
+            color: #7f8c8d;
+            font-size: 1.1em;
+        }
+        
+        .header .timing {
+            background: #e8f4f8;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 5px;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .swimlane-container {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .phase-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 30px;
+            font-size: 1.3em;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .swimlane {
+            display: grid;
+            grid-template-columns: 150px 1fr;
+            border-bottom: 2px solid #e0e0e0;
+            min-height: 100px;
+        }
+        
+        .swimlane:last-child {
+            border-bottom: none;
+        }
+        
+        .swimlane-label {
+            background: #34495e;
+            color: white;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.1em;
+            text-align: center;
+            border-right: 3px solid #2c3e50;
+        }
+        
+        .swimlane-content {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            overflow-x: auto;
+            background: #fafafa;
+        }
+        
+        .bpmn-element {
+            flex-shrink: 0;
+            text-align: center;
+            position: relative;
+        }
+        
+        .event {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 3px solid #2c3e50;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7em;
+            font-weight: bold;
+            padding: 5px;
+        }
+        
+        .event.start {
+            border-color: #27ae60;
+            color: #27ae60;
+        }
+        
+        .event.end {
+            border: 5px double #e74c3c;
+            color: #e74c3c;
+        }
+        
+        .event.intermediate {
+            border: 3px double #3498db;
+            color: #3498db;
+            width: 70px;
+            height: 70px;
+        }
+        
+        .task {
+            min-width: 140px;
+            max-width: 200px;
+            padding: 15px;
+            border: 2px solid #2c3e50;
+            border-radius: 8px;
+            background: #f39c12;
+            border-color: #d68910;
+            font-size: 0.85em;
+            line-height: 1.3;
+            color: white;
+        }
+        
+        .task.fase1 { background: #3498db; border-color: #2980b9; }
+        .task.fase2 { background: #9b59b6; border-color: #8e44ad; }
+        .task.fase3 { background: #e67e22; border-color: #d35400; }
+        .task.fase4 { background: #16a085; border-color: #138d75; }
+        .task.fase5 { background: #27ae60; border-color: #229954; }
+        .task.critical { background: #e74c3c; border-color: #c0392b; font-weight: bold; }
+        
+        .gateway {
+            width: 60px;
+            height: 60px;
+            background: #FFE4B5;
+            border: 3px solid #FF8C00;
+            transform: rotate(45deg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .gateway.exclusive::before {
+            content: '×';
+            font-size: 2em;
+            font-weight: bold;
+            transform: rotate(-45deg);
+        }
+        
+        .arrow {
+            width: 40px;
+            height: 2px;
+            background: #2c3e50;
+            position: relative;
+            flex-shrink: 0;
+        }
+        
+        .arrow::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: -4px;
+            width: 0;
+            height: 0;
+            border-left: 10px solid #2c3e50;
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+        }
+        
+        .label {
+            position: absolute;
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap;
+            font-size: 0.75em;
+            color: #7f8c8d;
+            background: #fafafa;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        
+        .timer {
+            background: #fff3cd;
+            border: 2px solid #f39c12;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7em;
+            font-weight: bold;
+            color: #f39c12;
+        }
+        
+        .info-box {
+            background: #e8f4f8;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin: 20px;
+            border-radius: 5px;
+        }
+        
+        .timeline-visual {
+            background: white;
+            padding: 30px;
+            margin: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .timeline-bar {
+            display: flex;
+            height: 60px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .timeline-segment {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.9em;
+            padding: 5px;
+            text-align: center;
+        }
+        
+        .fase1-bar { background: #3498db; flex: 1; }
+        .fase2-bar { background: #9b59b6; flex: 2; }
+        .fase3-bar { background: #e67e22; flex: 3; }
+        .fase4-bar { background: #16a085; flex: 2; }
+        .fase5-bar { background: #27ae60; flex: 2; }
+        
+        @media print {
+            body { background: white; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>💰 PROCESSO DE ORÇAMENTAÇÃO - BPMN 2.0</h1>
+        <p class="subtitle">GAK Construtora | 5 Fases Sequenciais</p>
+        <div class="timing">⏱️ PRAZO TOTAL: 10 DIAS CORRIDOS</div>
+    </div>
+
+    <!-- TIMELINE VISUAL -->
+    <div class="timeline-visual">
+        <h3 style="margin-bottom: 15px; color: #2c3e50;">📅 Timeline Visual - 10 Dias</h3>
+        <div class="timeline-bar">
+            <div class="timeline-segment fase1-bar">Dia 1<br>Pré-leitura</div>
+            <div class="timeline-segment fase2-bar">Dias 2-3<br>Quantitativos</div>
+            <div class="timeline-segment fase3-bar">Dias 4-6<br>Visita In-loco</div>
+            <div class="timeline-segment fase4-bar">Dias 7-8<br>Entrega Interna</div>
+            <div class="timeline-segment fase5-bar">Dias 9-10<br>Entrega Cliente</div>
+        </div>
+    </div>
+
+    <!-- FASE 1: PRÉ-LEITURA -->
+    <div class="swimlane-container">
+        <div class="phase-header" style="background: #3498db;">
+            📖 FASE 1: PRÉ-LEITURA DO PROJETO (1 dia)
+        </div>
+
+        <div class="swimlane">
+            <div class="swimlane-label">
+                👩‍💼<br>THAIZ
+            </div>
+            <div class="swimlane-content">
+                <div class="bpmn-element">
+                    <div class="event start">Projeto Executivo Recebido</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="timer">1 dia</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task fase1">Fazer Pré-leitura<br>do Projeto</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task fase1">Identificar Escopo<br>Geral</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="event intermediate">Fim Fase 1</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FASE 2: QUANTITATIVOS -->
+    <div class="swimlane-container">
+        <div class="phase-header" style="background: #9b59b6;">
+            📊 FASE 2: QUANTITATIVOS (2 dias)
+        </div>
+
+        <div class="swimlane">
+            <div class="swimlane-label">
+                👩‍💼<br>THAIZ
+            </div>
+            <div class="swimlane-content">
+                <div class="bpmn-element">
+                    <div class="timer">2 dias</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task fase2">Leitura da Planta<br>(Detalhada)</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task fase2">Quantitativos no<br>VIGHA - GAK</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task fase2">Quantitativos<br>Prestadores/Extras</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="event intermediate">Fim Fase 2</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="swimlane">
+            <div class="swimlane-label">
+                👨‍💼<br>GUILHERME
+            </div>
+            <div class="swimlane-content">
+                <div style="width: 60px;"></div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task fase2">Trabalha em Paralelo<br>(Validação Quantitativos)</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FASE 3: VISITA IN-LOCO -->
+    <div class="swimlane-container">
+        <div class="phase-header" style="background: #e67e22;">
+            🏠 FASE 3: VISITA IN-LOCO (3 dias)
+        </div>
+
+        <div class="swimlane">
+            <div class="swimlane-label">
+                👩‍💼<br>THAIZ
+            </div>
+            <div class="swimlane-content">
+                <div class="bpmn-element">
+                    <div class="timer">3 dias</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task fase3">Identificar Dúvidas<br>Técnicas</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task fase3">Enviar Dúvidas<br>para Arquiteto</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task fase3">Medição<br>In-loco</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="swimlane">
+            <div class="swimlane-label">
+                🏗️<br>ARQUITETO
+            </div>
+            <div class="swimlane-content">
+                <div style="width: 300px;"></div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task fase3">Responder Dúvidas<br>(SLA: 24h)</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="gateway exclusive">
+                        <div class="label">Respondeu?</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="swimlane">
+            <div class="swimlane-label">
+                👩‍💼<br>THAIZ
+            </div>
+            <div class="swimlane-content">
+                <div style="width: 550px;"></div>
+                <div style="font-size: 0.8em; color: #27ae60; font-weight: bold;">SIM ↓</div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task fase3">Solicitar Orçamentos<br>Prestadores</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task fase3">Solicitar Orçamentos<br>Terceiros</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="swimlane">
+            <div class="swimlane-label">
+                👷<br>PRESTADORES<br>+<br>TERCEIROS
+            </div>
+            <div class="swimlane-content">
+                <div style="width: 790px;"></div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task fase3">Enviar Orçamentos<br>(SLA: 48h)</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="gateway exclusive">
+                        <div class="label">Recebidos?</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="swimlane">
+            <div class="swimlane-label">
+                👩‍💼<br>THAIZ
+            </div>
+            <div class="swimlane-content">
+                <div style="width: 1000px;"></div>
+                <div style="font-size: 0.8em; color: #27ae60; font-weight: bold;">SIM ↓</div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task fase3">Consolidar Todos<br>Orçamentos</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="event intermediate">Fim Fase 3</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FASE 4: ENTREGA INTERNA -->
+    <div class="swimlane-container">
+        <div class="phase-header" style="background: #16a085;">
+            🔍 FASE 4: ENTREGA INTERNA (2 dias)
+        </div>
+
+        <div class="swimlane">
+            <div class="swimlane-label">
+                👩‍💼<br>THAIZ
+            </div>
+            <div class="swimlane-content">
+                <div class="bpmn-element">
+                    <div class="timer">2 dias</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task critical fase4">CONFERIR Quantitativos<br>(CRÍTICO)</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task fase4">Consolidar Orçamento<br>Completo</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task fase4">Apresentar para<br>Guilherme</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="swimlane">
+            <div class="swimlane-label">
+                👨‍💼<br>GUILHERME
+            </div>
+            <div class="swimlane-content">
+                <div style="width: 500px;"></div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task fase4">Repasse das<br>Dúvidas</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task critical fase4">Ajustar Valores R$<br>+ Margem</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="gateway exclusive">
+                        <div class="label">Aprovado?</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="swimlane">
+            <div class="swimlane-label">
+                👨‍💼<br>GUILHERME
+            </div>
+            <div class="swimlane-content">
+                <div style="width: 790px;"></div>
+                <div style="font-size: 0.8em; color: #27ae60; font-weight: bold;">SIM ↓</div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="event intermediate">Orçamento Interno<br>Validado</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FASE 5: ENTREGA FINAL CLIENTE -->
+    <div class="swimlane-container">
+        <div class="phase-header" style="background: #27ae60;">
+            🎁 FASE 5: ENTREGA FINAL CLIENTE (2 dias)
+        </div>
+
+        <div class="swimlane">
+            <div class="swimlane-label">
+                👨‍💼<br>GUILHERME
+            </div>
+            <div class="swimlane-content">
+                <div class="bpmn-element">
+                    <div class="timer">2 dias</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task fase5">Ajuste Final<br>Valores R$</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task fase5">Preparar Apresentação<br>Cliente</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task fase5">Enviar Orçamento<br>Formal Cliente</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="event end">Orçamento<br>Entregue</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="swimlane">
+            <div class="swimlane-label">
+                🏠<br>CLIENTE
+            </div>
+            <div class="swimlane-content">
+                <div style="width: 500px;"></div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task fase5">Receber e Analisar<br>Orçamento</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="gateway exclusive">
+                        <div class="label">Aprova?</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="swimlane">
+            <div class="swimlane-label">
+                👨‍💼<br>GUILHERME
+            </div>
+            <div class="swimlane-content">
+                <div style="width: 670px;"></div>
+                <div style="font-size: 0.8em; color: #27ae60; font-weight: bold;">SIM ↓</div>
+                <div class="arrow"></div>
+                
+                <div class="bpmn-element">
+                    <div class="task fase5">Preparar Contrato</div>
+                </div>
+                <div class="arrow"></div>
+                
+                <div style="font-weight: bold; color: #27ae60;">→ INÍCIO OBRA</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- INFO BOXES -->
+    <div class="info-box" style="background: #ffe6e6; border-left-color: #e74c3c;">
+        <h3>🔴 PONTOS CRÍTICOS</h3>
+        <ul style="margin-left: 20px; margin-top: 10px;">
+            <li><strong>Conferência Quantitativos (Fase 4):</strong> Erro aqui = prejuízo obra toda</li>
+            <li><strong>Dependência Arquiteto (Fase 3):</strong> Se não responde 24h → atrasa processo</li>
+            <li><strong>Dependência Prestadores (Fase 3):</strong> Se não enviam orçamento 48h → atrasa</li>
+            <li><strong>Aprovação Guilherme (Fase 4):</strong> Gargalo - precisa estar disponível</li>
+        </ul>
+    </div>
+
+    <div class="info-box">
+        <h3>📊 Resumo Swimlanes</h3>
+        <p><strong>👩‍💼 THAIZ:</strong> Fases 1, 2, 3, 4 (início) = 80% trabalho técnico</p>
+        <p><strong>👨‍💼 GUILHERME:</strong> Fases 2 (?), 4 (fim), 5 = 20% validação comercial</p>
+        <p><strong>🏗️ ARQUITETO:</strong> Fase 3 (esclarecimento dúvidas - SLA 24h)</p>
+        <p><strong>👷 PRESTADORES/TERCEIROS:</strong> Fase 3 (envio orçamentos - SLA 48h)</p>
+        <p><strong>🏠 CLIENTE:</strong> Fase 5 (recebe e aprova orçamento)</p>
+    </div>
+
+    <div class="info-box" style="background: #d4edda; border-left-color: #28a745;">
+        <h3>✅ MELHORIAS SUGERIDAS</h3>
+        <ol style="margin-left: 20px;">
+            <li><strong>Fase 0:</strong> Alinhamento cliente (30min) ANTES orçar → Evita orçar coisa errada</li>
+            <li><strong>SLAs Externos:</strong> Arquiteto 24h, Prestadores 48h → Plano B se não cumprir</li>
+            <li><strong>Dupla Conferência:</strong> Thaiz + Guilherme conferem quantitativos → Reduz erros</li>
+            <li><strong>Checkpoint Dia 8:</strong> Guilherme aprova formalmente ANTES enviar cliente</li>
+            <li><strong>Template Padronizado:</strong> Orçamento visual profissional → Melhora conversão</li>
+        </ol>
+    </div>
+
+    <div class="info-box" style="background: #fff3cd; border-left-color: #f39c12;">
+        <h3>⚠️ CONEXÃO COM PROCESSO MACRO</h3>
+        <p><strong>ORÇAMENTAÇÃO é processo COMERCIAL que antecede tudo!</strong></p>
+        <p><strong>Fluxo completo:</strong></p>
+        <p>Lead → <strong>ORÇAMENTAÇÃO (10 dias)</strong> → Contrato → Revisão Projeto → Início Obra → Execução → Finalização</p>
+        <p style="margin-top: 10px;"><strong>CRÍTICO:</strong> Erro aqui = margem errada obra toda!</p>
+    </div>
+
+    <div style="margin-top: 20px; padding: 15px; background: white; border-radius: 10px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+        <button onclick="window.print()" style="padding: 12px 30px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 8px; font-size: 1.1em; font-weight: bold; cursor: pointer;">
+            🖨️ Imprimir Fluxograma
+        </button>
+    </div>
+</body>
+</html>
