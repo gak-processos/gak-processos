@@ -1281,68 +1281,99 @@
 
             <!-- HISTÓRICO (EXEMPLO) -->
             <div class="feedback-history">
-                <h3 class="subsection-title">📋 Feedbacks Registrados (Exemplo)</h3>
-                
-                <div class="alert alert-warning">
-                    <strong>💡 Nota:</strong> Em produção, esta seção mostrará todos os feedbacks registrados pela equipe. Os exemplos abaixo são apenas para demonstração.
-                </div>
+                <!-- ============================================ -->
+<!-- SEÇÃO FEEDBACKS REGISTRADOS - NÃO DELETAR! -->
+<!-- ============================================ -->
 
-                <!-- EXEMPLO 1 -->
-                <div class="feedback-item problema">
-                    <div class="feedback-header">
-                        <div>
-                            <h4 style="color: #e74c3c; margin-bottom: 5px;">⚠️ Materiais chegam atrasados</h4>
-                            <div class="feedback-meta">
-                                <span>👤 Thaiz Benz</span>
-                                <span>📅 28/12/2025</span>
-                                <span>🔄 Processo: Compras</span>
-                            </div>
-                        </div>
-                        <span class="priority-badge alta">🔴 Alta</span>
-                    </div>
-                    <p style="margin-top: 10px; color: #2c3e50;">
-                        Materiais frequentemente chegam 1-2 dias após prazo combinado com fornecedor, atrasando obra. Acontece em ~60% das compras. Sugestão: criar buffer de 2 dias no cronograma ou trocar fornecedores críticos.
-                    </p>
-                </div>
+<h3 class="subsection-title">📋 Feedbacks Registrados (<span id="feedbackCounter">0</span>)</h3>
 
-                <!-- EXEMPLO 2 -->
-                <div class="feedback-item melhoria">
-                    <div class="feedback-header">
-                        <div>
-                            <h4 style="color: #27ae60; margin-bottom: 5px;">💡 Automatizar lembretes atas</h4>
-                            <div class="feedback-meta">
-                                <span>👤 Carlos Luz</span>
-                                <span>📅 27/12/2025</span>
-                                <span>🔄 Processo: Reuniões e Atas</span>
-                            </div>
-                        </div>
-                        <span class="priority-badge media">🟡 Média</span>
-                    </div>
-                    <p style="margin-top: 10px; color: #2c3e50;">
-                        Podemos usar Google Calendar para enviar lembrete automático 24h após reunião se ata não foi enviada. Isso evitaria esquecimentos e garantiria 100% atas enviadas no prazo.
-                    </p>
-                </div>
+<!-- Botões de Ação -->
+<div style="margin: 20px 0; display: flex; gap: 10px; flex-wrap: wrap;">
+    <button onclick="displayFeedbacks()" style="
+        background: #007bff; 
+        color: white; 
+        border: none; 
+        padding: 10px 20px; 
+        border-radius: 6px; 
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 500;
+        transition: background 0.3s;
+    " onmouseover="this.style.background='#0056b3'" onmouseout="this.style.background='#007bff'">
+        🔄 Atualizar Lista
+    </button>
+    
+    <button onclick="exportFeedbacks()" style="
+        background: #28a745; 
+        color: white; 
+        border: none; 
+        padding: 10px 20px; 
+        border-radius: 6px; 
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 500;
+        transition: background 0.3s;
+    " onmouseover="this.style.background='#1e7e34'" onmouseout="this.style.background='#28a745'">
+        💾 Exportar JSON
+    </button>
+    
+    <button onclick="clearAllFeedbacks()" style="
+        background: #dc3545; 
+        color: white; 
+        border: none; 
+        padding: 10px 20px; 
+        border-radius: 6px; 
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 500;
+        transition: background 0.3s;
+    " onmouseover="this.style.background='#bd2130'" onmouseout="this.style.background='#dc3545'">
+        🗑️ Limpar Todos
+    </button>
+</div>
 
-                <!-- EXEMPLO 3 -->
-                <div class="feedback-item problema">
-                    <div class="feedback-header">
-                        <div>
-                            <h4 style="color: #e74c3c; margin-bottom: 5px;">⚠️ Prestadores trabalham com versão errada projeto</h4>
-                            <div class="feedback-meta">
-                                <span>👤 Thaiz Benz</span>
-                                <span>📅 26/12/2025</span>
-                                <span>🔄 Processo: Gestão de Mudanças</span>
-                            </div>
-                        </div>
-                        <span class="priority-badge alta">🔴 Alta</span>
-                    </div>
-                    <p style="margin-top: 10px; color: #2c3e50;">
-                        Obra Apartamento Silva: Gesseiro trabalhou com Rev.02 quando já estava Rev.04. Tivemos que refazer teto inteiro. Custo: +R$ 2.800. Frequência: Acontece 2-3 vezes por ano. Solução implementada: Processo Gestão Mudanças com confirmação obrigatória.
-                    </p>
-                </div>
-            </div>
+<!-- Filtros -->
+<div style="margin: 20px 0; padding: 15px; background: #f8f9fa; border-radius: 8px; border: 1px solid #dee2e6;">
+    <strong style="margin-right: 15px;">🔍 Filtrar por:</strong>
+    
+    <select onchange="filterFeedbacks('tipo', this.value)" style="
+        margin-right: 10px; 
+        padding: 8px 12px; 
+        border: 1px solid #ced4da; 
+        border-radius: 4px;
+        font-size: 14px;
+        cursor: pointer;
+    ">
+        <option value="todos">Todos os tipos</option>
+        <option value="melhoria">💡 Melhorias</option>
+        <option value="problema">⚠️ Problemas</option>
+    </select>
+    
+    <select onchange="filterFeedbacks('prioridade', this.value)" style="
+        padding: 8px 12px; 
+        border: 1px solid #ced4da; 
+        border-radius: 4px;
+        font-size: 14px;
+        cursor: pointer;
+    ">
+        <option value="todos">Todas prioridades</option>
+        <option value="alta">🔴 Alta</option>
+        <option value="media">🟡 Média</option>
+        <option value="baixa">🟢 Baixa</option>
+    </select>
+</div>
+
+<!-- CONTAINER ONDE OS FEEDBACKS VÃO APARECER - IMPORTANTE! -->
+<div id="feedbacksList" style="margin-top: 20px;">
+    <!-- Os feedbacks vão aparecer aqui automaticamente -->
+    <div style="text-align: center; padding: 40px; color: #666; background: #f8f9fa; border-radius: 8px; border: 1px solid #dee2e6;">
+        <p style="font-size: 18px; margin: 0; font-weight: 500;">📋 Nenhum feedback registrado ainda.</p>
+        <p style="margin: 10px 0 0 0; font-size: 14px;">Seja o primeiro a contribuir!</p>
+    </div>
+</div>
+
+<!-- FIM SEÇÃO FEEDBACKS -->
         </div>
-
         <!-- ABA D
         <!-- ABA DOCUMENTOS -->
         <div id="documentos" class="tab-content">
