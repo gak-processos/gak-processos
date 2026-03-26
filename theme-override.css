@@ -1,0 +1,997 @@
+/* ============================================================
+   GAK Processos â Theme Override
+   Transforma o tema escuro da intranet no layout claro do app-gak
+   Adicione este arquivo ao index.html APÃS o <style> existente:
+   <link rel="stylesheet" href="gak-processos-theme-override.css">
+   ============================================================ */
+
+/* ââ IMPORTAR FONTES DO APP-GAK ââ */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Cormorant+Garamond:wght@300;400;500;600&display=swap');
+
+/* ââ VARIÃVEIS DE COR â DE ESCURO PARA CLARO ââ */
+:root {
+  /* Backgrounds */
+  --bg: #F8F7F5;
+  --surface: #1B2A4A;
+  --surface-2: rgba(27, 42, 74, 0.06);
+  --surface-3: rgba(27, 42, 74, 0.10);
+
+  /* Borders */
+  --border: rgba(27, 42, 74, 0.08);
+  --border-strong: rgba(27, 42, 74, 0.15);
+
+  /* Cores de destaque */
+  --gold: #C9A96E;
+  --gold-light: #D4B97E;
+  --gold-dim: rgba(201, 169, 110, 0.12);
+  --green: #4caf82;
+  --green-dim: rgba(76, 175, 130, 0.10);
+  --red: #e05252;
+  --red-dim: rgba(224, 82, 82, 0.10);
+  --amber: #e08a3c;
+  --amber-dim: rgba(224, 138, 60, 0.10);
+
+  /* Textos â agora escuros */
+  --text: #1B2A4A;
+  --text-2: #4A4A4A;
+  --text-3: #9A9890;
+
+  /* Tokens do app-gak */
+  --navy: #1B2A4A;
+  --azul: #2E5FA3;
+  --dourado: #C9A96E;
+  --offwhite: #F8F7F5;
+  --branco: #FFFFFF;
+  --cinza-claro: #E8E6E1;
+  --texto-suave: #9A9890;
+  --cinza: #4A4A4A;
+
+  --radius: 10px;
+  --radius-lg: 16px;
+}
+
+/* ââ BODY ââ */
+body {
+  font-family: 'Montserrat', sans-serif !important;
+  background: var(--offwhite) !important;
+  color: var(--navy) !important;
+}
+
+/* ââ SIDEBAR â ESTILO NAVY DO APP-GAK ââ */
+.sidebar {
+  background: var(--navy) !important;
+  border-right: none !important;
+}
+
+.sidebar-brand {
+  padding: 35px 30px 25px !important;
+  border-bottom: 1px solid rgba(255,255,255,0.06) !important;
+}
+
+.brand-logo {
+  font-family: 'Cormorant Garamond', serif !important;
+  font-size: 38px !important;
+  font-weight: 300 !important;
+  letter-spacing: 12px !important;
+  color: #9AA0A6 !important;
+}
+
+.brand-sub {
+  font-size: 9px !important;
+  letter-spacing: 3px !important;
+  color: rgba(255,255,255,0.25) !important;
+  text-transform: uppercase !important;
+  margin-top: 6px !important;
+  font-family: 'Montserrat', sans-serif !important;
+}
+
+/* Nav section labels */
+.nav-section-label {
+  font-size: 9px !important;
+  letter-spacing: 3px !important;
+  text-transform: uppercase !important;
+  color: rgba(255,255,255,0.2) !important;
+  padding: 15px 10px 8px !important;
+  font-family: 'Montserrat', sans-serif !important;
+}
+
+/* Nav links */
+.nav-link {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  padding: 11px 10px !important;
+  border-radius: 6px !important;
+  cursor: pointer !important;
+  font-size: 12px !important;
+  color: rgba(255,255,255,0.45) !important;
+  letter-spacing: 0.5px !important;
+  margin-bottom: 2px !important;
+  transition: all 0.2s !important;
+  border-left: 2px solid transparent !important;
+  text-decoration: none !important;
+  font-family: 'Montserrat', sans-serif !important;
+}
+
+.nav-link:hover {
+  background: rgba(255,255,255,0.05) !important;
+  color: rgba(255,255,255,0.75) !important;
+}
+
+.nav-link.active {
+  background: rgba(201,169,110,0.12) !important;
+  color: var(--dourado) !important;
+  border-left-color: var(--dourado) !important;
+}
+
+.sidebar-footer {
+  margin-top: auto !important;
+  padding: 16px 24px !important;
+  border-top: 1px solid rgba(255,255,255,0.06) !important;
+  font-size: 11px !important;
+  color: rgba(255,255,255,0.25) !important;
+  line-height: 1.6 !important;
+  font-family: 'Montserrat', sans-serif !important;
+}
+
+.sidebar-footer strong {
+  color: rgba(255,255,255,0.4) !important;
+}
+
+/* ââ TOPBAR â ESTILO CLARO ââ */
+.topbar {
+  background: rgba(248, 247, 245, 0.92) !important;
+  backdrop-filter: blur(12px) !important;
+  border-bottom: 1px solid var(--cinza-claro) !important;
+}
+
+.topbar-title {
+  color: var(--navy) !important;
+  font-family: 'Montserrat', sans-serif !important;
+}
+
+.topbar-status span {
+  color: var(--cinza) !important;
+}
+
+.phase-badge {
+  background: rgba(201,169,110,0.12) !important;
+  color: var(--dourado) !important;
+  border: 1px solid rgba(201,169,110,0.25) !important;
+}
+
+.phase-dot {
+  background: var(--dourado) !important;
+}
+
+.nav-toggle {
+  color: var(--navy) !important;
+  background: transparent !important;
+  border: 1px solid var(--cinza-claro) !important;
+}
+
+/* ââ MAIN CONTENT ââ */
+.main {
+  background: var(--offwhite) !important;
+}
+
+/* ââ HERO SECTION ââ */
+.hero-badge {
+  background: rgba(76, 175, 130, 0.10) !important;
+  color: #4caf82 !important;
+  border: 1px solid rgba(76, 175, 130, 0.25) !important;
+}
+
+.hero h1,
+.hero-title,
+.section-heading h2 {
+  color: var(--navy) !important;
+  font-family: 'Montserrat', sans-serif !important;
+}
+
+.hero h1 span,
+.hero-title span {
+  color: var(--dourado) !important;
+}
+
+.hero-sub,
+.hero p {
+  color: var(--cinza) !important;
+}
+
+/* ââ STAT CARDS ââ */
+.stat-card,
+.stat {
+  background: var(--branco) !important;
+  border: 1px solid var(--cinza-claro) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 1px 3px rgba(27,42,74,0.04) !important;
+}
+
+.stat-value,
+.stat-card .value {
+  color: var(--navy) !important;
+  font-family: 'Montserrat', sans-serif !important;
+}
+
+.stat-label,
+.stat-card .label {
+  color: var(--texto-suave) !important;
+}
+
+/* ââ SECTIONS ââ */
+.section {
+  background: var(--branco) !important;
+  border: 1px solid var(--cinza-claro) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 1px 4px rgba(27,42,74,0.04) !important;
+}
+
+.section-header {
+  border-bottom: 1px solid var(--cinza-claro) !important;
+}
+
+.section-title {
+  color: var(--navy) !important;
+  font-family: 'Montserrat', sans-serif !important;
+}
+
+.section-sub {
+  color: var(--texto-suave) !important;
+}
+
+.section-heading {
+  color: var(--navy) !important;
+}
+
+.section-heading .tag {
+  color: var(--dourado) !important;
+}
+
+/* ââ PHASE/CORE CARDS ââ */
+.core-phase,
+.phase-card {
+  background: var(--branco) !important;
+  border: 1px solid var(--cinza-claro) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 1px 3px rgba(27,42,74,0.04) !important;
+}
+
+.phase-name,
+.core-phase .name {
+  color: var(--navy) !important;
+}
+
+.phase-desc,
+.core-phase .desc {
+  color: var(--cinza) !important;
+}
+
+.phase-bar-fill {
+  background: linear-gradient(90deg, var(--dourado), var(--azul)) !important;
+}
+
+.phase-pct {
+  color: var(--dourado) !important;
+}
+
+/* ââ QUICK ACCESS CARDS ââ */
+.quick-card {
+  background: var(--branco) !important;
+  border: 1px solid var(--cinza-claro) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 1px 3px rgba(27,42,74,0.04) !important;
+  transition: all 0.2s !important;
+}
+
+.quick-card:hover {
+  border-color: var(--dourado) !important;
+  box-shadow: 0 4px 12px rgba(201,169,110,0.12) !important;
+  transform: translateY(-2px) !important;
+}
+
+.quick-card .title {
+  color: var(--navy) !important;
+}
+
+.quick-card .desc {
+  color: var(--cinza) !important;
+}
+
+.quick-card .meta {
+  color: var(--texto-suave) !important;
+}
+
+/* ââ IMPLEMENTATION CARDS ââ */
+.impl-card {
+  background: var(--branco) !important;
+  border: 1px solid var(--cinza-claro) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 1px 3px rgba(27,42,74,0.04) !important;
+}
+
+.impl-card .name {
+  color: var(--navy) !important;
+}
+
+.impl-card .type {
+  color: var(--texto-suave) !important;
+}
+
+.impl-card .desc {
+  color: var(--cinza) !important;
+}
+
+.impl-bar-fill {
+  background: linear-gradient(90deg, var(--dourado), var(--azul)) !important;
+}
+
+/* ââ TIMELINE ââ */
+.tl-block {
+  border-left: 2px solid var(--cinza-claro) !important;
+}
+
+.tl-period {
+  color: var(--navy) !important;
+  font-family: 'Montserrat', sans-serif !important;
+}
+
+.tl-title {
+  color: var(--navy) !important;
+}
+
+.tl-desc {
+  color: var(--cinza) !important;
+}
+
+.tl-item {
+  color: var(--cinza) !important;
+}
+
+.tl-dot {
+  background: var(--dourado) !important;
+}
+
+/* ââ DIAGNOSTIC / MATURITY ââ */
+.maturity-bar-fill {
+  background: linear-gradient(90deg, var(--dourado), var(--azul)) !important;
+}
+
+.maturity-label {
+  color: var(--navy) !important;
+}
+
+.maturity-val {
+  color: var(--dourado) !important;
+}
+
+.paradox-box {
+  background: rgba(201,169,110,0.08) !important;
+  border: 1px solid rgba(201,169,110,0.2) !important;
+  color: var(--cinza) !important;
+}
+
+.paradox-box strong {
+  color: var(--navy) !important;
+}
+
+/* ââ PROBLEM CARDS ââ */
+.problem-card {
+  background: var(--branco) !important;
+  border: 1px solid var(--cinza-claro) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 1px 3px rgba(27,42,74,0.04) !important;
+}
+
+.problem-card .severity {
+  color: #e05252 !important;
+}
+
+.problem-card .title {
+  color: var(--navy) !important;
+}
+
+.problem-card .quote {
+  color: var(--cinza) !important;
+  font-style: italic !important;
+  border-left: 3px solid var(--dourado) !important;
+}
+
+.problem-card .author {
+  color: var(--texto-suave) !important;
+}
+
+/* ââ POP CARDS ââ */
+.pop-card {
+  background: var(--branco) !important;
+  border: 1px solid var(--cinza-claro) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 1px 3px rgba(27,42,74,0.04) !important;
+}
+
+.pop-card .pop-header {
+  border-bottom: 1px solid var(--cinza-claro) !important;
+}
+
+.pop-card .pop-title {
+  color: var(--navy) !important;
+}
+
+.pop-card .pop-meta {
+  color: var(--texto-suave) !important;
+}
+
+.pop-card .pop-body {
+  color: var(--cinza) !important;
+}
+
+.pop-card .pop-item {
+  color: var(--cinza) !important;
+  border-bottom: 1px solid rgba(27,42,74,0.05) !important;
+}
+
+.pop-card .pop-item .tag {
+  background: rgba(46,95,163,0.08) !important;
+  color: var(--azul) !important;
+}
+
+.pop-badge {
+  background: rgba(76,175,130,0.1) !important;
+  color: #4caf82 !important;
+}
+
+.pop-link {
+  color: var(--azul) !important;
+}
+
+.pop-link:hover {
+  color: var(--dourado) !important;
+}
+
+/* ââ MARCO CARDS ââ */
+.marco-card {
+  background: var(--branco) !important;
+  border: 1px solid var(--cinza-claro) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 1px 3px rgba(27,42,74,0.04) !important;
+}
+
+.marco-card .marco-num {
+  color: var(--dourado) !important;
+}
+
+.marco-card .marco-title {
+  color: var(--navy) !important;
+}
+
+.marco-card .marco-desc {
+  color: var(--cinza) !important;
+}
+
+/* ââ PRIORITY CARDS (P1/P2/P3) ââ */
+.priority-card {
+  background: var(--branco) !important;
+  border: 1px solid var(--cinza-claro) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 1px 3px rgba(27,42,74,0.04) !important;
+}
+
+.priority-card .name {
+  color: var(--navy) !important;
+}
+
+.priority-card .desc {
+  color: var(--cinza) !important;
+}
+
+.priority-label {
+  font-family: 'Montserrat', sans-serif !important;
+}
+
+/* ââ REPORT CARDS ââ */
+.report-card {
+  background: var(--branco) !important;
+  border: 1px solid var(--cinza-claro) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 1px 3px rgba(27,42,74,0.04) !important;
+}
+
+.report-card .title {
+  color: var(--navy) !important;
+}
+
+.report-card .desc {
+  color: var(--cinza) !important;
+}
+
+.report-badge {
+  background: rgba(76,175,130,0.1) !important;
+  color: #4caf82 !important;
+}
+
+/* ââ DOCUMENT CARDS ââ */
+.doc-card {
+  background: var(--branco) !important;
+  border: 1px solid var(--cinza-claro) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 1px 3px rgba(27,42,74,0.04) !important;
+  transition: all 0.2s !important;
+}
+
+.doc-card:hover {
+  border-color: var(--dourado) !important;
+  box-shadow: 0 4px 12px rgba(201,169,110,0.12) !important;
+}
+
+.doc-card .title {
+  color: var(--navy) !important;
+}
+
+.doc-card .desc {
+  color: var(--cinza) !important;
+}
+
+/* ââ ROLE CARDS ââ */
+.role-card {
+  background: var(--branco) !important;
+  border: 1px solid var(--cinza-claro) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 1px 3px rgba(27,42,74,0.04) !important;
+}
+
+.role-card .role-name {
+  color: var(--navy) !important;
+}
+
+.role-card .role-title {
+  color: var(--dourado) !important;
+}
+
+.role-card .role-section-title {
+  color: var(--navy) !important;
+}
+
+.role-card .role-item {
+  color: var(--cinza) !important;
+}
+
+/* ââ DECISION TABLE ââ */
+.decision-table {
+  background: var(--branco) !important;
+  border: 1px solid var(--cinza-claro) !important;
+  border-radius: 12px !important;
+  overflow: hidden !important;
+}
+
+.decision-table th {
+  background: var(--navy) !important;
+  color: var(--branco) !important;
+  font-family: 'Montserrat', sans-serif !important;
+}
+
+.decision-table td {
+  color: var(--cinza) !important;
+  border-bottom: 1px solid var(--cinza-claro) !important;
+}
+
+.decision-table tr:hover td {
+  background: rgba(201,169,110,0.04) !important;
+}
+
+/* ââ FEEDBACK FORM ââ */
+.feedback-form {
+  background: var(--branco) !important;
+  border: 1px solid var(--cinza-claro) !important;
+}
+
+.feedback-form label {
+  color: var(--navy) !important;
+}
+
+.feedback-form input,
+.feedback-form textarea,
+.feedback-form select {
+  background: var(--offwhite) !important;
+  border: 1px solid var(--cinza-claro) !important;
+  color: var(--navy) !important;
+  font-family: 'Montserrat', sans-serif !important;
+}
+
+.feedback-form input:focus,
+.feedback-form textarea:focus,
+.feedback-form select:focus {
+  border-color: var(--dourado) !important;
+  box-shadow: 0 0 0 3px rgba(201,169,110,0.15) !important;
+  outline: none !important;
+}
+
+.feedback-form input::placeholder,
+.feedback-form textarea::placeholder {
+  color: var(--texto-suave) !important;
+}
+
+/* ââ BUTTONS ââ */
+.btn-primary,
+button[type="submit"],
+.btn-feedback {
+  background: var(--navy) !important;
+  color: var(--branco) !important;
+  border: none !important;
+  font-family: 'Montserrat', sans-serif !important;
+  font-weight: 500 !important;
+  border-radius: 8px !important;
+}
+
+.btn-primary:hover,
+button[type="submit"]:hover,
+.btn-feedback:hover {
+  background: var(--azul) !important;
+}
+
+/* ââ TOGGLE BUTTONS (frequÃªncia, prioridade) ââ */
+.toggle-btn,
+.freq-btn,
+.prio-btn,
+.type-btn {
+  background: var(--offwhite) !important;
+  border: 1px solid var(--cinza-claro) !important;
+  color: var(--cinza) !important;
+}
+
+.toggle-btn.active,
+.freq-btn.active,
+.prio-btn.active,
+.type-btn.active {
+  background: rgba(201,169,110,0.12) !important;
+  border-color: var(--dourado) !important;
+  color: var(--dourado) !important;
+}
+
+/* ââ BADGES GENÃRICOS ââ */
+.badge,
+.status-badge {
+  font-family: 'Montserrat', sans-serif !important;
+}
+
+/* ââ QUOTE / BLOCKQUOTE ââ */
+blockquote,
+.quote-box {
+  background: rgba(201,169,110,0.06) !important;
+  border-left: 3px solid var(--dourado) !important;
+  color: var(--cinza) !important;
+}
+
+blockquote cite,
+.quote-author {
+  color: var(--texto-suave) !important;
+}
+
+/* ââ GOLDEN RULE BOX ââ */
+.golden-rule,
+.rule-box {
+  background: rgba(224,82,82,0.06) !important;
+  border: 1px solid rgba(224,82,82,0.2) !important;
+  color: var(--cinza) !important;
+}
+
+/* ââ METRIC CARDS ââ */
+.metric-card {
+  background: var(--branco) !important;
+  border: 1px solid var(--cinza-claro) !important;
+  border-radius: 12px !important;
+}
+
+.metric-card .value {
+  color: var(--navy) !important;
+}
+
+.metric-card .label {
+  color: var(--texto-suave) !important;
+}
+
+/* ââ SUCCESS METRICS ââ */
+.metric-row,
+.success-metric {
+  background: var(--branco) !important;
+  border: 1px solid var(--cinza-claro) !important;
+  border-radius: 10px !important;
+}
+
+.metric-row .metric-name,
+.success-metric .name {
+  color: var(--navy) !important;
+}
+
+.metric-row .metric-target,
+.success-metric .target {
+  color: var(--dourado) !important;
+}
+
+/* ââ VISION / MISSION / VALUES ââ */
+.vision-card,
+.value-card {
+  background: var(--branco) !important;
+  border: 1px solid var(--cinza-claro) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 1px 3px rgba(27,42,74,0.04) !important;
+}
+
+.vision-card .title,
+.value-card .title {
+  color: var(--navy) !important;
+}
+
+.vision-card .text,
+.value-card .desc {
+  color: var(--cinza) !important;
+}
+
+.vision-card .pending,
+.value-card .pending {
+  color: var(--texto-suave) !important;
+}
+
+/* ââ SCROLLBAR ââ */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--offwhite);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--cinza-claro);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--texto-suave);
+}
+
+/* ââ SELECTION ââ */
+::selection {
+  background: rgba(201,169,110,0.25);
+  color: var(--navy);
+}
+
+/* ââ LINKS GERAIS ââ */
+a {
+  color: var(--azul) !important;
+}
+
+a:hover {
+  color: var(--dourado) !important;
+}
+
+/* ââ CARDS GENÃRICOS (.card) ââ */
+.card {
+  background: var(--branco) !important;
+  border: 1px solid var(--cinza-claro) !important;
+  box-shadow: 0 1px 3px rgba(27,42,74,0.04) !important;
+  border-radius: 12px !important;
+}
+
+.card:hover {
+  border-color: var(--dourado) !important;
+  box-shadow: 0 4px 12px rgba(201,169,110,0.12) !important;
+  transform: translateY(-2px) !important;
+}
+
+.card-icon { opacity: 0.7; }
+.card-tag { color: var(--dourado) !important; }
+.card-title { color: var(--navy) !important; }
+.card-desc { color: var(--cinza) !important; }
+.card-meta { color: var(--texto-suave) !important; }
+.card-meta span { color: var(--texto-suave) !important; }
+
+/* ââ PROCESS CARDS ââ */
+.process-full-card {
+  background: var(--branco) !important;
+  border: 1px solid var(--cinza-claro) !important;
+  box-shadow: 0 1px 3px rgba(27,42,74,0.04) !important;
+  border-radius: 12px !important;
+}
+
+.process-header {
+  border-bottom: 1px solid var(--cinza-claro) !important;
+}
+
+.process-header:hover {
+  background: rgba(201,169,110,0.04) !important;
+}
+
+.process-name { color: var(--navy) !important; }
+.process-num { color: var(--dourado) !important; }
+.process-info { color: var(--texto-suave) !important; }
+.process-meta-row { color: var(--texto-suave) !important; }
+
+.process-body {
+  background: var(--offwhite) !important;
+  border-top: 1px solid var(--cinza-claro) !important;
+}
+
+.process-steps { color: var(--cinza) !important; }
+.process-chevron { color: var(--texto-suave) !important; }
+
+/* ââ SYSTEM CARDS ââ */
+.system-card {
+  background: var(--branco) !important;
+  border: 1px solid var(--cinza-claro) !important;
+  box-shadow: 0 1px 3px rgba(27,42,74,0.04) !important;
+  border-radius: 12px !important;
+}
+
+.system-name { color: var(--navy) !important; }
+.system-type { color: var(--texto-suave) !important; }
+.system-desc { color: var(--cinza) !important; }
+.system-pct { color: var(--dourado) !important; }
+
+/* ââ MILESTONE ââ */
+.milestone {
+  background: var(--branco) !important;
+  border: 1px solid var(--cinza-claro) !important;
+  box-shadow: 0 1px 3px rgba(27,42,74,0.04) !important;
+  border-radius: 12px !important;
+}
+
+/* ââ HIGHLIGHT BOX ââ */
+.highlight-box {
+  background: rgba(201,169,110,0.06) !important;
+  border: 1px solid rgba(201,169,110,0.15) !important;
+  border-radius: 12px !important;
+}
+
+.highlight-title { color: var(--navy) !important; }
+.highlight-text { color: var(--cinza) !important; }
+
+/* ââ QUOTE BLOCK ââ */
+.quote-block {
+  background: rgba(201,169,110,0.06) !important;
+  border-left: 3px solid var(--dourado) !important;
+  color: var(--cinza) !important;
+}
+
+.quote-attr { color: var(--texto-suave) !important; }
+
+/* ââ PROGRESS BARS ââ */
+.progress-bar-wrap {
+  background: var(--cinza-claro) !important;
+}
+
+.progress-bar {
+  background: linear-gradient(90deg, var(--dourado), var(--azul)) !important;
+}
+
+.progress-label { color: var(--texto-suave) !important; }
+.progress-overview { color: var(--cinza) !important; }
+
+/* ââ PHASE BLOCKS ââ */
+.phase-block {
+  background: var(--branco) !important;
+  border: 1px solid var(--cinza-claro) !important;
+  box-shadow: 0 1px 3px rgba(27,42,74,0.04) !important;
+  border-radius: 12px !important;
+}
+
+.phase-name { color: var(--navy) !important; }
+.phase-title { color: var(--texto-suave) !important; }
+
+/* ââ MATURITY ITEMS ââ */
+.maturity-item {
+  background: var(--branco) !important;
+  border: 1px solid var(--cinza-claro) !important;
+  border-radius: 10px !important;
+}
+
+.maturity-label { color: var(--navy) !important; }
+.maturity-score { color: var(--texto-suave) !important; }
+.maturity-score strong { color: var(--dourado) !important; }
+.maturity-bar-wrap { background: var(--cinza-claro) !important; }
+.maturity-bar { background: linear-gradient(90deg, var(--dourado), var(--azul)) !important; }
+
+/* ââ DOC ITEMS ââ */
+.doc-item {
+  background: var(--branco) !important;
+  border: 1px solid var(--cinza-claro) !important;
+  box-shadow: 0 1px 3px rgba(27,42,74,0.04) !important;
+  border-radius: 12px !important;
+}
+
+.doc-item:hover {
+  border-color: var(--dourado) !important;
+  box-shadow: 0 4px 12px rgba(201,169,110,0.12) !important;
+}
+
+.doc-name { color: var(--navy) !important; }
+.doc-desc { color: var(--cinza) !important; }
+.doc-meta { color: var(--texto-suave) !important; }
+.doc-icon { color: var(--dourado) !important; }
+.doc-arrow { color: var(--texto-suave) !important; }
+.doc-list { background: transparent !important; }
+
+/* ââ BADGES ââ */
+.badge { font-family: 'Montserrat', sans-serif !important; }
+.badge-done { background: rgba(76,175,130,0.08) !important; color: #4caf82 !important; }
+.badge-progress { background: rgba(201,169,110,0.1) !important; color: var(--dourado) !important; }
+.badge-pending { background: rgba(27,42,74,0.06) !important; color: var(--texto-suave) !important; }
+.badge-critical { background: rgba(224,82,82,0.08) !important; color: #e05252 !important; }
+
+/* ââ FORMS ââ */
+.form-label { color: var(--navy) !important; }
+
+.form-control {
+  background: var(--offwhite) !important;
+  border: 1px solid var(--cinza-claro) !important;
+  color: var(--navy) !important;
+}
+
+.form-control:focus {
+  border-color: var(--dourado) !important;
+  box-shadow: 0 0 0 3px rgba(201,169,110,0.15) !important;
+}
+
+/* ââ RADIO BUTTONS ââ */
+.radio-btn {
+  background: var(--offwhite) !important;
+  border: 1px solid var(--cinza-claro) !important;
+  color: var(--cinza) !important;
+}
+
+.radio-btn.active {
+  background: rgba(201,169,110,0.12) !important;
+  border-color: var(--dourado) !important;
+  color: var(--dourado) !important;
+}
+
+/* ââ BUTTONS ââ */
+.btn {
+  background: var(--navy) !important;
+  color: var(--branco) !important;
+  font-family: 'Montserrat', sans-serif !important;
+}
+
+.btn:hover {
+  background: var(--azul) !important;
+}
+
+/* ââ HERO ââ */
+.hero { color: var(--navy) !important; }
+.hero h1 { color: var(--navy) !important; }
+.hero-tag {
+  background: rgba(76,175,130,0.08) !important;
+  color: #4caf82 !important;
+  border: 1px solid rgba(76,175,130,0.2) !important;
+}
+.hero-desc { color: var(--cinza) !important; }
+
+/* ââ TABLES ââ */
+table { background: var(--branco) !important; }
+th { background: var(--navy) !important; color: var(--branco) !important; font-family: 'Montserrat', sans-serif !important; }
+td { color: var(--cinza) !important; border-bottom: 1px solid var(--cinza-claro) !important; }
+tr:hover td { background: rgba(201,169,110,0.04) !important; }
+.table-wrap { border-radius: 12px !important; overflow: hidden !important; border: 1px solid var(--cinza-claro) !important; }
+
+/* ââ TIMELINE ââ */
+.tl-block { border-left: 2px solid var(--cinza-claro) !important; }
+.tl-dot { background: var(--dourado) !important; }
+.tl-period { color: var(--navy) !important; }
+.tl-title { color: var(--navy) !important; }
+.tl-desc { color: var(--cinza) !important; }
+.tl-item { color: var(--cinza) !important; }
+.ti { color: var(--cinza) !important; }
+
+/* ââ MOBILE RESPONSIVE ââ */
+@media (max-width: 768px) {
+  .topbar {
+    background: rgba(248, 247, 245, 0.95) !important;
+  }
+
+  .sidebar {
+    transform: translateX(-100%);
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+}
